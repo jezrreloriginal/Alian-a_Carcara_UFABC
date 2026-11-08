@@ -231,7 +231,7 @@ $('#q').addEventListener('input',function(e){qs=e.target.value.toLowerCase().tri
 $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(c)open_(c.dataset.id)});
 $('#dk').onclick=function(){like_(true)};$('#dx').onclick=function(){$('#dlg').close()};
 $('#dlg').addEventListener('click',function(e){if(e.target===this)this.close()});
-var SHEET_URL='https://script.google.com/macros/s/AKfycbxXGA8EHAlx9-0JPLfyx_sCbHeAij6Y1AqXDPBbfDEzmw1Qz7Q0t4jycw1K96k9I9UHdA/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbwrPJnZJ-PyJ70oijP3UtxonxsGNjTkWHi9M5VzC6m2ELPQlebwWSYeJ6QQps4ipC3xig/exec';
 var ADMIN_URL='admin.html';
 $('#admBtn').onclick=function(){$('#pi').value='';$('#pe').textContent='';$('#pw').showModal();$('#pi').focus()};
 $('#pc').onclick=function(){$('#pw').close()};
@@ -246,7 +246,8 @@ function E(s){return String(s).replace(/[&<>]/g,function(m){return{'&':'&amp;','
 var W=['mudar','ousar','ouvir'],wi=0;
 function tick(){var e=$('#pal');e.textContent=W[wi%W.length]+'.';e.style.animation='none';e.offsetWidth;e.style.animation='wordin .5s cubic-bezier(.2,1,.3,1)'}
 function apply(d){
-  if(d.areas)AREAS=d.areas;if(d.propostas)P=d.propostas;if(d.cronograma)ROAD=d.cronograma;if(d.diretoria)TEAM=d.diretoria;
+  function ok(x){return x&&(Array.isArray(x)?x.length:Object.keys(x).length)}
+  if(ok(d.areas))AREAS=d.areas;if(ok(d.propostas))P=d.propostas;if(ok(d.cronograma))ROAD=d.cronograma;if(ok(d.diretoria))TEAM=d.diretoria;
   if(d.pilares&&d.pilares.length)$('.pil').innerHTML=d.pilares.map(function(p,k){return '<div class="pl rv" style="background:'+E(p.c||'#FFC93C')+';transition-delay:'+k*.15+'s">'+E(p.e||'')+'<b>'+E(p.t||'')+'</b>'+E(p.s||'')+'</div>'}).join('');
   var c=d.chapa||{};
   if(c.nome){$('#nome').innerHTML=E(c.nome).replace(' ','<br>');document.title=c.nome+' – Nossas propostas'}
@@ -269,7 +270,7 @@ addEventListener('scroll',function(){var r=$('#road').getBoundingClientRect(),p=
 $('.stat:nth-child(2) b').dataset.n=Object.keys(AREAS).length;
 }
 function get(u,o){return fetch(u,o).then(function(r){return r.ok?r.json():null}).catch(function(){return null})}
-(SHEET_URL?get(SHEET_URL):Promise.resolve(null)).then(function(d){return d&&d.propostas?d:get('dados.json',{cache:'no-cache'})}).then(function(d){if(d)apply(d);boot();tick();setInterval(function(){wi++;tick()},2600)});
+(SHEET_URL?get(SHEET_URL):Promise.resolve(null)).then(function(d){return d&&d.propostas&&d.propostas.length?d:get('dados.json',{cache:'no-cache'})}).then(function(d){if(d)apply(d);boot();tick();setInterval(function(){wi++;tick()},2600)});
 </script>
 </body>
 </html>
