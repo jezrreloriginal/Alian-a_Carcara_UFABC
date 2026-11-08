@@ -232,14 +232,15 @@ $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');
 $('#dk').onclick=function(){like_(true)};$('#dx').onclick=function(){$('#dlg').close()};
 $('#dlg').addEventListener('click',function(e){if(e.target===this)this.close()});
 async function sha(t){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
-var ADMIN_URL='admin.html';
+var SHEET_URL=''; /* cole aqui a URL do Google Apps Script (termina em /exec) */
+var ADMIN_URL='admin.html'; /* ou o link da sua planilha do Google */
 var HASH='26f8fafd0b3cca03cf257a5b3c90db13c9b34fc53b01aaab24df712f6e143060';
 $('#admBtn').onclick=function(){$('#pi').value='';$('#pe').textContent='';$('#pw').showModal();$('#pi').focus()};
 $('#pc').onclick=function(){$('#pw').close()};
 $('#pw').addEventListener('click',function(e){if(e.target===this)this.close()});
 $('#pf').addEventListener('submit',function(e){e.preventDefault();
   sha($('#pi').value).then(function(h){
-    if(h===HASH){var ts=Date.now();try{sessionStorage.setItem('adm','1')}catch(x){}sha(HASH+ts).then(function(sg){location.href=ADMIN_URL+'#'+ts+'.'+sg})}
+    if(h===HASH){var ts=Date.now();try{sessionStorage.setItem('adm','1')}catch(x){}sha(HASH+ts).then(function(sg){location.href=/google\.com/.test(ADMIN_URL)?ADMIN_URL:ADMIN_URL+'#'+ts+'.'+sg})}
     else{$('#pe').textContent='Senha incorreta.';var f=$('#pf');f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
   }).catch(function(){$('#pe').textContent='Abra o site por https para usar a senha.'})});
 function E(s){return String(s).replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})}
@@ -268,7 +269,8 @@ addEventListener('scroll',function(){var r=$('#road').getBoundingClientRect(),p=
 
 $('.stat:nth-child(2) b').dataset.n=Object.keys(AREAS).length;
 }
-fetch('dados.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(d){if(d)apply(d);boot();tick();setInterval(function(){wi++;tick()},2600)});
+function get(u,o){return fetch(u,o).then(function(r){return r.ok?r.json():null}).catch(function(){return null})}
+(SHEET_URL?get(SHEET_URL):Promise.resolve(null)).then(function(d){return d&&d.propostas?d:get('dados.json',{cache:'no-cache'})}).then(function(d){if(d)apply(d);boot();tick();setInterval(function(){wi++;tick()},2600)});
 </script>
 </body>
 </html>
