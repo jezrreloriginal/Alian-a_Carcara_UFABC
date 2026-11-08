@@ -364,5 +364,25 @@
    "Mulheres",
    ""
   ]
+ ],
+ "pilares": [
+  {
+   "e": "🗣️",
+   "t": "Pluralidade",
+   "s": "Todos têm voz.",
+   "c": "#FFC93C"
+  },
+  {
+   "e": "🎓",
+   "t": "Prioridade",
+   "s": "O estudante vem primeiro.",
+   "c": "#14B88F"
+  },
+  {
+   "e": "🤲",
+   "t": "Participação",
+   "s": "Todos constroem juntos.",
+   "c": "#FF5C8A"
+  }
  ]
 }
