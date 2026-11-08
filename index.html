@@ -232,13 +232,14 @@ $('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');
 $('#dk').onclick=function(){like_(true)};$('#dx').onclick=function(){$('#dlg').close()};
 $('#dlg').addEventListener('click',function(e){if(e.target===this)this.close()});
 async function sha(t){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
+var ADMIN_URL='admin.html';
 var HASH='26f8fafd0b3cca03cf257a5b3c90db13c9b34fc53b01aaab24df712f6e143060';
 $('#admBtn').onclick=function(){$('#pi').value='';$('#pe').textContent='';$('#pw').showModal();$('#pi').focus()};
 $('#pc').onclick=function(){$('#pw').close()};
 $('#pw').addEventListener('click',function(e){if(e.target===this)this.close()});
 $('#pf').addEventListener('submit',function(e){e.preventDefault();
   sha($('#pi').value).then(function(h){
-    if(h===HASH){try{sessionStorage.setItem('adm','1')}catch(x){}location.href='admin.html'}
+    if(h===HASH){var ts=Date.now();try{sessionStorage.setItem('adm','1')}catch(x){}sha(HASH+ts).then(function(sg){location.href=ADMIN_URL+'#'+ts+'.'+sg})}
     else{$('#pe').textContent='Senha incorreta.';var f=$('#pf');f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
   }).catch(function(){$('#pe').textContent='Abra o site por https para usar a senha.'})});
 function E(s){return String(s).replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})}
@@ -246,6 +247,7 @@ var W=['mudar','ousar','ouvir'],wi=0;
 function tick(){var e=$('#pal');e.textContent=W[wi%W.length]+'.';e.style.animation='none';e.offsetWidth;e.style.animation='wordin .5s cubic-bezier(.2,1,.3,1)'}
 function apply(d){
   if(d.areas)AREAS=d.areas;if(d.propostas)P=d.propostas;if(d.cronograma)ROAD=d.cronograma;if(d.diretoria)TEAM=d.diretoria;
+  if(d.pilares&&d.pilares.length)$('.pil').innerHTML=d.pilares.map(function(p,k){return '<div class="pl rv" style="background:'+E(p.c||'#FFC93C')+';transition-delay:'+k*.15+'s">'+E(p.e||'')+'<b>'+E(p.t||'')+'</b>'+E(p.s||'')+'</div>'}).join('');
   var c=d.chapa||{};
   if(c.nome){$('#nome').innerHTML=E(c.nome).replace(' ','<br>');document.title=c.nome+' – Nossas propostas'}
   if(c.lema!=null)$('#lema').textContent=c.lema;
