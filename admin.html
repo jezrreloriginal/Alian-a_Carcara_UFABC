@@ -75,7 +75,7 @@ var HASH='26f8fafd0b3cca03cf257a5b3c90db13c9b34fc53b01aaab24df712f6e143060';
       else{document.getElementById('le').textContent='Senha incorreta.';var f=e.target;f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
     }).catch(function(){document.getElementById('le').textContent='Abra o painel por https para usar a senha.'})})})();
 var D=null,dirty=false,tab='chapa';
-var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['cron','Cronograma'],['dir','Diretoria'],['pub','Publicar']];
+var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['pil','Pilares'],['cron','Cronograma'],['dir','Diretoria'],['pub','Publicar']];
 var $=function(s){return document.querySelector(s)};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function inp(p,v,l,o){o=o||{};var a=' data-p="'+p+'"'+(o.m?' data-m="'+o.m+'"':'');
@@ -107,6 +107,10 @@ function view(){
     h='<h2>Áreas</h2><p class="hint">Os filtros do site. A cor aparece no topo dos cards.</p>';
     Object.keys(D.areas).forEach(function(a){h+='<div class="arow"><input type="color" value="'+D.areas[a]+'" data-ac="'+esc(a)+'"><input value="'+esc(a)+'" data-ar="'+esc(a)+'"><button class="btn d s" data-act="dela" data-n="'+esc(a)+'">Excluir</button></div>'});
     h+='<button class="btn" data-act="adda">+ Nova área</button>'}
+  if(tab==='pil'){
+    h='<h2>Pilares</h2><p class="hint">Os cards coloridos “Nossos pilares” do site.</p>';
+    D.pilares.forEach(function(p,i){var b='pilares.'+i+'.';h+='<div class="box"><div class="g">'+inp(b+'e',p.e,'Emoji')+inp(b+'t',p.t,'Título')+inp(b+'s',p.s,'Frase',{w:1})+'<label class="f"><span>Cor</span><input type="color" data-p="'+b+'c" value="'+esc(p.c||'#FFDF00')+'"></label></div><button class="btn d s" data-act="del" data-l="pilares" data-i="'+i+'">Excluir</button></div>'});
+    h+='<button class="btn" data-act="addpl">+ Novo pilar</button>'}
   if(tab==='cron'){
     h='<h2>Cronograma</h2><p class="hint">Linha do tempo do site, na ordem em que aparece.</p>';
     D.cronograma.forEach(function(r,i){h+='<div class="line">'+inp('cronograma.'+i+'.0',r[0],'Quando')+inp('cronograma.'+i+'.1',r[1],'O que acontece')+'<button class="btn d s" data-act="del" data-l="cronograma" data-i="'+i+'">✕</button></div>'});
@@ -127,7 +131,7 @@ function ld(){try{return JSON.parse(localStorage.getItem('gh')||'{}')}catch(e){r
 function render(){
   $('#nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===tab?'on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('');
   var m=$('#m');m.style.animation='none';m.offsetWidth;m.style.animation='';m.innerHTML=view()}
-function load(d){D=d;D.chapa=D.chapa||{};D.areas=D.areas||{};D.propostas=D.propostas||[];D.cronograma=D.cronograma||[];D.diretoria=D.diretoria||[];dirty=false;$('#bar').classList.remove('on');render()}
+function load(d){D=d;D.chapa=D.chapa||{};D.areas=D.areas||{};D.propostas=D.propostas||[];D.cronograma=D.cronograma||[];D.diretoria=D.diretoria||[];D.pilares=D.pilares||[];dirty=false;$('#bar').classList.remove('on');render()}
 function json(){return JSON.stringify(D,null,1)}
 async function gh(){
   var o=$('#go').value.trim(),r=$('#gr').value.trim(),br=$('#gb').value.trim()||'main',pa=$('#gp').value.trim()||'dados.json',tk=$('#gt').value.trim();
@@ -159,6 +163,7 @@ document.addEventListener('click',function(e){
   else if(a==='down'&&i<l.length-1){l.splice(i+1,0,l.splice(i,1)[0])}
   else if(a==='del'){if(!confirm('Excluir este item?'))return;l.splice(i,1)}
   else if(a==='addp'){D.propostas.push({id:Date.now(),a:Object.keys(D.areas)[0]||'',i:'✨',t:'Nova proposta',s:'',d:[],w:''})}
+  else if(a==='addpl')D.pilares.push({e:'⭐',t:'Novo pilar',s:'',c:'#FFDF00'})
   else if(a==='addc')D.cronograma.push(['',''])
   else if(a==='addd')D.diretoria.push(['',''])
   else if(a==='adda'){var n='Nova área',k=1;while(D.areas[n])n='Nova área '+(++k);D.areas[n]='#009C3B'}
