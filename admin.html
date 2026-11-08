@@ -66,7 +66,7 @@ summary em{font-style:normal;font-size:.78rem;padding:3px 12px;border-radius:99p
 <div class="bar" id="bar"><span id="bt">Você tem alterações não salvas</span><button class="btn y s" id="sv" data-act="save">Salvar na planilha</button></div>
 
 <script>
-var SHEET_URL='https://script.google.com/macros/s/AKfycbwrPJnZJ-PyJ70oijP3UtxonxsGNjTkWHi9M5VzC6m2ELPQlebwWSYeJ6QQps4ipC3xig/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbyX5cXrAa7Y1HoYpFKi_6tfzPIOGcBZWhSTXmDeLAJo5fda8CAhbP0em6aYtv4zn0LH/exec';
 var PW='';try{PW=sessionStorage.getItem('adm_pw')||''}catch(e){}
 function api(o){return fetch(SHEET_URL,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
 function trava(m){document.getElementById('lock').hidden=false;document.getElementById('le').textContent=m||''}
@@ -75,99 +75,140 @@ document.getElementById('lf2').addEventListener('submit',function(e){e.preventDe
   api({acao:'ler',senha:PW}).then(function(r){
     if(r.ok){try{sessionStorage.setItem('adm_pw',PW)}catch(x){}document.getElementById('lock').hidden=true;load(r.dados)}
     else{PW='';document.getElementById('le').textContent=r.erro||'Senha incorreta.';f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
-  }).catch(function(){document.getElementById('le').textContent='Não consegui falar com a planilha.'})});
-document.getElementById('out').onclick=function(){try{sessionStorage.removeItem('adm_pw')}catch(e){}location.href='index.html'};
-var D=null,dirty=false,tab='chapa';
-var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['pil','Pilares'],['cron','Cronograma'],['dir','Diretoria']];
-var $=function(s){return document.querySelector(s)};
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function inp(p,v,l,o){o=o||{};var a=' data-p="'+p+'"'+(o.m?' data-m="'+o.m+'"':'');
-  return '<label class="f'+(o.w?' w':'')+'"><span>'+l+'</span>'+(o.ta?'<textarea rows="'+o.ta+'"'+a+'>'+esc(v)+'</textarea>':'<input'+a+' value="'+esc(v)+'"'+(o.ph?' placeholder="'+esc(o.ph)+'"':'')+'>')+'</label>'}
-function setP(p,v,m){var k=p.split('.'),o=D;for(var i=0;i<k.length-1;i++)o=o[k[i]];
-  if(m==='lines')v=v.split('\n').map(function(x){return x.trim()}).filter(Boolean);
-  if(m==='csv')v=v.split(',').map(function(x){return x.trim()}).filter(Boolean);
-  o[k[k.length-1]]=v;mark()}
-function mark(){dirty=true;$('#bt').textContent='Você tem alterações não salvas';$('#bar').classList.add('on')}
-function msg(t,ok){$('#bt').textContent=t;$('#bar').classList.add('on');if(ok)setTimeout(function(){if(!dirty)$('#bar').classList.remove('on')},4000)}
+  }).catch(function(){document.getElementById('le').textContent='Erro de conexão. Tente novamente.'})});
 
-function view(){
-  var h='';
-  if(!D)return '<p class="hint">Carregando dados da planilha…</p>';
-  if(tab==='chapa'){var c=D.chapa;
-    h='<h2>Chapa</h2><p class="hint">Nome, lema e logo que aparecem no início do site.</p>'+
-    '<div class="box"><div class="row" style="align-items:flex-start;gap:18px"><div><div class="logo" id="lp">'+(c.logo?'<img src="'+c.logo+'" alt="Logo">':'Sua logo aqui')+'</div></div><div><label class="btn s" style="cursor:pointer;display:inline-block">Enviar logo<input type="file" id="lf" accept="image/*" hidden></label> <button class="btn d s" data-act="nologo">Remover</button><p class="hint" style="margin-top:10px">PNG, JPG ou SVG. A imagem é reduzida automaticamente.</p></div></div></div>'+
-    '<div class="box">'+inp('chapa.nome',c.nome,'Nome da chapa')+inp('chapa.lema',c.lema,'Lema (começo da frase)',{ph:'coragem para'})+inp('chapa.palavras',(c.palavras||[]).join(', '),'Palavras que alternam (separe por vírgula)',{m:'csv',ph:'mudar, ousar, ouvir'})+inp('chapa.frase',c.frase,'Frase de destaque')+'</div>'}
-  if(tab==='prop'){
-    h='<h2>Propostas</h2><p class="hint">Resumo curto no card, 3 tópicos ao abrir. Quanto mais direto, melhor.</p>';
-    D.propostas.forEach(function(p,i){var b='propostas.'+i+'.';
-      h+='<details style="animation-delay:'+Math.min(i,10)*30+'ms"><summary><span>'+esc(p.i)+' '+esc(p.t)+'</span><em style="background:'+(D.areas[p.a]||'#ccc')+'">'+esc(p.a)+'</em></summary><div class="g">'+
-      inp(b+'i',p.i,'Emoji')+inp(b+'t',p.t,'Título')+inp(b+'s',p.s,'Resumo (uma frase)',{w:1})+
-      '<label class="f"><span>Área</span><select data-p="'+b+'a">'+Object.keys(D.areas).map(function(a){return '<option'+(a===p.a?' selected':'')+'>'+esc(a)+'</option>'}).join('')+'</select></label>'+inp(b+'w',p.w,'Prazo',{ph:'Em até 90 dias'})+'<label class="f"><span>Mostrar no site</span><select data-p="'+b+'m"><option value="true">Sim</option><option value="false"'+(p.m===false||p.m==="false"?' selected':'')+'>Não</option></select></label>'+
-      inp(b+'d',(p.d||[]).join('\n'),'Tópicos (um por linha, até 4)',{ta:4,m:'lines',w:1})+
-      '<div class="row w"><button class="btn o s" data-act="up" data-l="propostas" data-i="'+i+'">↑ Subir</button><button class="btn o s" data-act="down" data-l="propostas" data-i="'+i+'">↓ Descer</button><button class="btn d s" data-act="del" data-l="propostas" data-i="'+i+'">Excluir</button></div></div></details>'});
-    h+='<button class="btn" data-act="addp">+ Nova proposta</button>'}
-  if(tab==='areas'){
-    h='<h2>Áreas</h2><p class="hint">Os filtros do site. A cor aparece no topo dos cards.</p>';
-    Object.keys(D.areas).forEach(function(a){h+='<div class="arow"><input type="color" value="'+D.areas[a]+'" data-ac="'+esc(a)+'"><input value="'+esc(a)+'" data-ar="'+esc(a)+'"><button class="btn d s" data-act="dela" data-n="'+esc(a)+'">Excluir</button></div>'});
-    h+='<button class="btn" data-act="adda">+ Nova área</button>'}
-  if(tab==='pil'){
-    h='<h2>Pilares</h2><p class="hint">Os cards coloridos “Nossos pilares” do site.</p>';
-    D.pilares.forEach(function(p,i){var b='pilares.'+i+'.';h+='<div class="box"><div class="g">'+inp(b+'e',p.e,'Emoji')+inp(b+'t',p.t,'Título')+inp(b+'s',p.s,'Frase',{w:1})+'<label class="f"><span>Cor</span><input type="color" data-p="'+b+'c" value="'+esc(p.c||'#FFDF00')+'"></label></div><button class="btn d s" data-act="del" data-l="pilares" data-i="'+i+'">Excluir</button></div>'});
-    h+='<button class="btn" data-act="addpl">+ Novo pilar</button>'}
-  if(tab==='cron'){
-    h='<h2>Cronograma</h2><p class="hint">Linha do tempo do site, na ordem em que aparece.</p>';
-    D.cronograma.forEach(function(r,i){h+='<div class="line">'+inp('cronograma.'+i+'.0',r[0],'Quando')+inp('cronograma.'+i+'.1',r[1],'O que acontece')+'<button class="btn d s" data-act="del" data-l="cronograma" data-i="'+i+'">✕</button></div>'});
-    h+='<button class="btn" data-act="addc">+ Nova etapa</button>'}
-  if(tab==='dir'){
-    h='<h2>Diretoria</h2><p class="hint">Deixe o nome vazio para mostrar “Nome em breve”.</p>';
-    D.diretoria.forEach(function(r,i){h+='<div class="line">'+inp('diretoria.'+i+'.0',r[0],'Cargo')+inp('diretoria.'+i+'.1',r[1],'Nome completo')+'<button class="btn d s" data-act="del" data-l="diretoria" data-i="'+i+'">✕</button></div>'});
-    h+='<button class="btn" data-act="addd">+ Novo cargo</button>'}
-  return h}
-function render(){
-  $('#nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===tab?'on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('');
-  var m=$('#m');m.style.animation='none';m.offsetWidth;m.style.animation='';m.innerHTML=view()}
-function load(d){D=d;D.chapa=D.chapa||{};D.areas=D.areas||{};D.propostas=D.propostas||[];D.cronograma=D.cronograma||[];D.diretoria=D.diretoria||[];D.pilares=D.pilares||[];dirty=false;$('#bar').classList.remove('on');render()}
-function json(){return JSON.stringify(D,null,1)}
-function shrink(file){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,256/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);D.chapa.logo=c.toDataURL('image/webp',.8);if(D.chapa.logo.length>45000){D.chapa.logo='';alert('Imagem muito pesada. Use uma logo mais simples ou menor.')}mark();render()};im.src=fr.result};fr.readAsDataURL(file)}
+if(!PW)trava();else api({acao:'ler',senha:PW}).then(function(r){if(r.ok)load(r.dados);else trava(r.erro)});
 
-document.addEventListener('input',function(e){var t=e.target;
-  if(t.dataset.p)setP(t.dataset.p,t.value,t.dataset.m);
-  if(t.dataset.ac){D.areas[t.dataset.ac]=t.value;mark()}});
-document.addEventListener('change',function(e){var t=e.target;
-  if(t.id==='lf'&&t.files[0])shrink(t.files[0]);
-  if(t.dataset.ar){var n=t.value.trim(),o=t.dataset.ar;if(!n||n===o||D.areas[n]){t.value=o;return}
-    var na={};Object.keys(D.areas).forEach(function(k){na[k===o?n:k]=D.areas[k]});D.areas=na;D.propostas.forEach(function(p){if(p.a===o)p.a=n});mark();render()}});
-document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-tab],[data-go],[data-act]');if(!t)return;
-  if(t.dataset.tab||t.dataset.go){tab=t.dataset.tab||t.dataset.go;render();return}
-  var a=t.dataset.act,l=t.dataset.l&&D[t.dataset.l],i=+t.dataset.i;
-  if(a==='up'&&i>0){l.splice(i-1,0,l.splice(i,1)[0])}
-  else if(a==='down'&&i<l.length-1){l.splice(i+1,0,l.splice(i,1)[0])}
-  else if(a==='del'){if(!confirm('Excluir este item?'))return;l.splice(i,1)}
-  else if(a==='addp'){D.propostas.push({id:Date.now(),a:Object.keys(D.areas)[0]||'',i:'✨',t:'Nova proposta',s:'',d:[],w:''})}
-  else if(a==='addpl')D.pilares.push({e:'⭐',t:'Novo pilar',s:'',c:'#FFDF00'})
-  else if(a==='addc')D.cronograma.push(['',''])
-  else if(a==='addd')D.diretoria.push(['',''])
-  else if(a==='adda'){var n='Nova área',k=1;while(D.areas[n])n='Nova área '+(++k);D.areas[n]='#009C3B'}
-  else if(a==='dela'){var nm=t.dataset.n;if(D.propostas.some(function(p){return p.a===nm}))return alert('Essa área ainda tem propostas. Mova ou exclua as propostas primeiro.');delete D.areas[nm]}
-  else if(a==='nologo')D.chapa.logo=''
-  else if(a==='save')return salvar()
-  else return;
-  mark();render()});
-addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
-function entrar(){
-  if(!PW)return trava('');
-  api({acao:'ler',senha:PW}).then(function(r){
-    if(r.ok){document.getElementById('lock').hidden=true;load(r.dados)}
-    else{PW='';try{sessionStorage.removeItem('adm_pw')}catch(e){}trava(r.erro)}
-  }).catch(function(){trava('Não consegui falar com a planilha. Confira a conexão e tente de novo.')})}
-function salvar(){
-  var b=$('#sv');b.disabled=true;$('#bt').textContent='Salvando…';$('#bar').classList.add('on');
-  api({acao:'salvar',senha:PW,dados:D}).then(function(r){
-    b.disabled=false;
-    if(r.ok){dirty=false;msg('Salvo na planilha! O site atualiza em cerca de 1 minuto.',1)}else msg(r.erro||'Não foi possível salvar.')
-  }).catch(function(){b.disabled=false;msg('Falha de conexão. Tente salvar de novo.')})}
-render();entrar();
+function load(D){
+  var tabs=['Chapa','Propostas','Áreas','Cronograma','Diretoria','Pilares'],tab=0;
+  var nav=document.getElementById('nav'),main=document.getElementById('m');
+  nav.innerHTML=tabs.map(function(t,i){return '<button'+(i===tab?' class="on"':'')+' data-i="'+i+'">'+t+'</button>'}).join('');
+  
+  function render(){
+    nav.querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===tab)});
+    if(tab===0){
+      main.innerHTML='<h2>Identidade da chapa</h2><p class="hint">Nome, lema, palavras animadas e slogan principal.</p>'+
+      '<div class="box"><div class="f"><span>Nome da chapa</span><input id="cn" value="'+(D.chapa.nome||'')+'"></div>'+
+      '<div class="f"><span>Lema (início da frase)</span><input id="cl" value="'+(D.chapa.lema||'')+'"></div>'+
+      '<div class="f"><span>Palavras animadas (separadas por vírgula)</span><input id="cp" value="'+(D.chapa.palavras||[]).join(', ')+'"></div>'+
+      '<div class="f"><span>Frase de impacto</span><input id="cf" value="'+(D.chapa.frase||'')+'"></div>'+
+      '<div class="f"><span>URL do Logo</span><input id="cg" value="'+(D.chapa.logo||'')+'"></div></div>';
+    }else if(tab===1){
+      main.innerHTML='<h2>Propostas</h2><p class="hint">Gerencie as propostas apresentadas no site.</p><div id="pl"></div><button class="btn s" id="addP">+ Adicionar proposta</button>';
+      renderPropostas();
+    }else if(tab===2){
+      main.innerHTML='<h2>Áreas e Cores</h2><p class="hint">Personalize as áreas e suas respectivas cores em HEX.</p><div id="al"></div><button class="btn s" id="addA">+ Adicionar área</button>';
+      renderAreas();
+    }else if(tab===3){
+      main.innerHTML='<h2>Cronograma</h2><p class="hint">Prazos e etapas da chapa.</p><div id="cr"></div><button class="btn s" id="addC">+ Adicionar etapa</button>';
+      renderCronograma();
+    }else if(tab===4){
+      main.innerHTML='<h2>Diretoria</h2><p class="hint">Membros e cargos da gestão.</p><div id="dr"></div><button class="btn s" id="addD">+ Adicionar membro</button>';
+      renderDiretoria();
+    }else if(tab===5){
+      main.innerHTML='<h2>Pilares</h2><p class="hint">Os três pilares fundamentais da chapa.</p><div id="pi"></div>';
+      renderPilares();
+    }
+  }
+
+  function renderPropostas(){
+    var h='';
+    (D.propostas||[]).forEach(function(p,i){
+      h+='<details><summary><span><strong>#'+p.id+'</strong> — '+p.t+' <em>'+p.a+'</em></span><button class="btn d s" data-del="p" data-idx="'+i+'">Excluir</button></summary>'+
+      '<div class="g"><div class="f"><span>ID numérico</span><input type="number" data-k="propostas" data-idx="'+i+'" data-f="id" value="'+p.id+'"></div>'+
+      '<div class="f"><span>Área</span><input data-k="propostas" data-idx="'+i+'" data-f="a" value="'+p.a+'"></div>'+
+      '<div class="f"><span>Ícone (Emoji)</span><input data-k="propostas" data-idx="'+i+'" data-f="i" value="'+p.i+'"></div>'+
+      '<div class="f"><span>Título</span><input data-k="propostas" data-idx="'+i+'" data-f="t" value="'+p.t+'"></div>'+
+      '<div class="w f"><span>Subtítulo</span><input data-k="propostas" data-idx="'+i+'" data-f="s" value="'+p.s+'"></div>'+
+      '<div class="w f"><span>Detalhes (separados por | )</span><textarea data-k="propostas" data-idx="'+i+'" data-f="d">'+(Array.isArray(p.d)?p.d.join(' | '):p.d)+'</textarea></div>'+
+      '<div class="w f"><span>Prazo / Quando</span><input data-k="propostas" data-idx="'+i+'" data-f="w" value="'+p.w+'"></div></div></details>';
+    });
+    document.getElementById('pl').innerHTML=h;
+  }
+
+  function renderAreas(){
+    var h='';
+    Object.keys(D.areas||{}).forEach(function(k,i){
+      h+='<div class="arow"><input data-area-k="'+i+'" value="'+k+'"><input type="color" data-area-v="'+i+'" value="'+D.areas[k]+'"><button class="btn d s" data-del="a" data-name="'+k+'">Excluir</button></div>';
+    });
+    document.getElementById('al').innerHTML=h;
+  }
+
+  function renderCronograma(){
+    var h='';
+    (D.cronograma||[]).forEach(function(c,i){
+      h+='<div class="line"><input data-k="cronograma" data-idx="'+i+'" data-f="0" value="'+c[0]+'"><input data-k="cronograma" data-idx="'+i+'" data-f="1" value="'+c[1]+'"><button class="btn d s" data-del="c" data-idx="'+i+'">Excluir</button></div>';
+    });
+    document.getElementById('cr').innerHTML=h;
+  }
+
+  function renderDiretoria(){
+    var h='';
+    (D.diretoria||[]).forEach(function(d,i){
+      h+='<div class="line"><input data-k="diretoria" data-idx="'+i+'" data-f="0" value="'+d[0]+'"><input data-k="diretoria" data-idx="'+i+'" data-f="1" value="'+d[1]+'"><button class="btn d s" data-del="d" data-idx="'+i+'">Excluir</button></div>';
+    });
+    document.getElementById('dr').innerHTML=h;
+  }
+
+  function renderPilares(){
+    var h='';
+    (D.pilares||[]).forEach(function(p,i){
+      h+='<div class="box"><div class="g"><div class="f"><span>Título</span><input data-k="pilares" data-idx="'+i+'" data-f="t" value="'+p.t+'"></div>'+
+      '<div class="f"><span>Subtítulo</span><input data-k="pilares" data-idx="'+i+'" data-f="s" value="'+p.s+'"></div>'+
+      '<div class="f"><span>Emoji</span><input data-k="pilares" data-idx="'+i+'" data-f="e" value="'+p.e+'"></div>'+
+      '<div class="f"><span>Cor (HEX)</span><input data-k="pilares" data-idx="'+i+'" data-f="c" value="'+p.c+'"></div></div></div>';
+    });
+    document.getElementById('pi').innerHTML=h;
+  }
+
+  nav.onclick=function(e){var b=e.target.closest('button');if(!b)return;tab=+b.dataset.i;render()};
+
+  main.oninput=function(e){
+    var t=e.target;
+    if(t.id==='cn')D.chapa.nome=t.value;
+    if(t.id==='cl')D.chapa.lema=t.value;
+    if(t.id==='cp')D.chapa.palavras=t.value.split(',').map(function(s){return s.trim()});
+    if(t.id==='cf')D.chapa.frase=t.value;
+    if(t.id==='cg')D.chapa.logo=t.value;
+
+    var k=t.dataset.k,idx=+t.dataset.idx,f=t.dataset.f;
+    if(k && !isNaN(idx)){
+      if(k==='propostas'){if(f==='d')D[k][idx][f]=t.value.split('|').map(function(s){return s.trim()});else D[k][idx][f]=t.value}
+      else if(k==='cronograma'||k==='diretoria'){D[k][idx][+f]=t.value}
+      else if(k==='pilares'){D[k][idx][f]=t.value}
+    }
+    document.getElementById('bar').classList.add('on');
+  };
+
+  main.onclick=function(e){
+    var b=e.target.closest('button');if(!b)return;
+    if(b.id==='addP'){D.propostas.push({id:D.propostas.length+1,a:'Gestão',i:'💡',t:'Nova proposta',s:'Subtítulo da proposta',d:['Detalhe 1'],w:'Durante o mandato'});renderPropostas();document.getElementById('bar').classList.add('on')}
+    if(b.id==='addA'){var nome='Nova Área';D.areas[nome]='#7F8BFF';renderAreas();document.getElementById('bar').classList.add('on')}
+    if(b.id==='addC'){D.cronograma.push(['Prazo','Descrição']);renderCronograma();document.getElementById('bar').classList.add('on')}
+    if(b.id==='addD'){D.diretoria.push(['Cargo','Nome']);renderDiretoria();document.getElementById('bar').classList.add('on')}
+
+    var del=b.dataset.del;
+    if(del){
+      var idx=+b.dataset.idx;
+      if(del==='p')D.propostas.splice(idx,1),renderPropostas();
+      if(del==='c')D.cronograma.splice(idx,1),renderCronograma();
+      if(del==='d')D.diretoria.splice(idx,1),renderDiretoria();
+      if(del==='a'){delete D.areas[b.dataset.name];renderAreas()}
+      document.getElementById('bar').classList.add('on');
+    }
+  };
+
+  document.getElementById('sv').onclick=function(){
+    var btn=this;btn.textContent='Salvando...';
+    api({acao:'salvar',senha:PW,dados:D}).then(function(r){
+      if(r.ok){btn.textContent='Salvo com sucesso!';document.getElementById('bar').classList.remove('on');setTimeout(function(){btn.textContent='Salvar na planilha'},2000)}
+      else{btn.textContent='Erro ao salvar';alert(r.erro||'Erro desconhecido')}
+    }).catch(function(){btn.textContent='Erro de conexão'});
+  };
+
+  document.getElementById('out').onclick=function(){sessionStorage.removeItem('adm_pw');location.reload()};
+  render();
+}
 </script>
 </body>
 </html>
