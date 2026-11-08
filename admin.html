@@ -59,24 +59,26 @@ summary em{font-style:normal;font-size:.78rem;padding:3px 12px;border-radius:99p
 <div id="lock" hidden><form id="lf2"><div class="mark" style="margin-bottom:14px"><i></i></div><h2>Área da chapa</h2><p class="hint" style="margin:0">Digite a senha para entrar no painel.</p><input type="password" id="lpw" autocomplete="off" aria-label="Senha"><p class="e" id="le"></p><button class="btn" type="submit">Entrar</button></form></div>
 <header>
   <div class="top"><div class="mark"><i></i></div><div><h1>Painel da chapa</h1><p id="sub">Edite e publique o site</p></div><div class="sp"></div>
-  <label class="btn y s" style="cursor:pointer">Abrir dados.json<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+  <a class="btn y s" href="index.html" style="text-decoration:none">Ver site</a><button class="btn o s" id="out" style="margin-left:8px">Sair</button></div>
   <nav id="nav"></nav>
 </header>
 <main id="m"><p class="hint">Carregando…</p></main>
-<div class="bar" id="bar">Você tem alterações não publicadas <button class="btn y s" data-go="pub">Publicar</button></div>
+<div class="bar" id="bar"><span id="bt">Você tem alterações não salvas</span><button class="btn y s" id="sv" data-act="save">Salvar na planilha</button></div>
 
 <script>
-async function sha(t){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('')}
-var HASH='26f8fafd0b3cca03cf257a5b3c90db13c9b34fc53b01aaab24df712f6e143060';
-(function(){var ok=false;try{ok=sessionStorage.getItem('adm')==='1'}catch(e){}
-  if(ok)return;var L=document.getElementById('lock');L.hidden=false;
-  document.getElementById('lf2').addEventListener('submit',function(e){e.preventDefault();
-    sha(document.getElementById('lpw').value).then(function(h){
-      if(h===HASH){try{sessionStorage.setItem('adm','1')}catch(x){}L.hidden=true}
-      else{document.getElementById('le').textContent='Senha incorreta.';var f=e.target;f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
-    }).catch(function(){document.getElementById('le').textContent='Abra o painel por https para usar a senha.'})})})();
+var SHEET_URL='https://script.google.com/macros/s/AKfycbxXGA8EHAlx9-0JPLfyx_sCbHeAij6Y1AqXDPBbfDEzmw1Qz7Q0t4jycw1K96k9I9UHdA/exec';
+var PW='';try{PW=sessionStorage.getItem('adm_pw')||''}catch(e){}
+function api(o){return fetch(SHEET_URL,{method:'POST',body:JSON.stringify(o)}).then(function(r){return r.json()})}
+function trava(m){document.getElementById('lock').hidden=false;document.getElementById('le').textContent=m||''}
+document.getElementById('lf2').addEventListener('submit',function(e){e.preventDefault();var f=e.target;PW=document.getElementById('lpw').value;
+  document.getElementById('le').textContent='Verificando…';
+  api({acao:'ler',senha:PW}).then(function(r){
+    if(r.ok){try{sessionStorage.setItem('adm_pw',PW)}catch(x){}document.getElementById('lock').hidden=true;load(r.dados)}
+    else{PW='';document.getElementById('le').textContent=r.erro||'Senha incorreta.';f.classList.remove('shake');f.offsetWidth;f.classList.add('shake')}
+  }).catch(function(){document.getElementById('le').textContent='Não consegui falar com a planilha.'})});
+document.getElementById('out').onclick=function(){try{sessionStorage.removeItem('adm_pw')}catch(e){}location.href='index.html'};
 var D=null,dirty=false,tab='chapa';
-var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['pil','Pilares'],['cron','Cronograma'],['dir','Diretoria'],['pub','Publicar']];
+var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['pil','Pilares'],['cron','Cronograma'],['dir','Diretoria']];
 var $=function(s){return document.querySelector(s)};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function inp(p,v,l,o){o=o||{};var a=' data-p="'+p+'"'+(o.m?' data-m="'+o.m+'"':'');
@@ -85,12 +87,12 @@ function setP(p,v,m){var k=p.split('.'),o=D;for(var i=0;i<k.length-1;i++)o=o[k[i
   if(m==='lines')v=v.split('\n').map(function(x){return x.trim()}).filter(Boolean);
   if(m==='csv')v=v.split(',').map(function(x){return x.trim()}).filter(Boolean);
   o[k[k.length-1]]=v;mark()}
-function mark(){dirty=true;$('#bar').classList.add('on')}
-function msg(t,ok){var e=$('#msg');if(e){e.className='msg'+(ok?' ok':'');e.textContent=t}}
+function mark(){dirty=true;$('#bt').textContent='Você tem alterações não salvas';$('#bar').classList.add('on')}
+function msg(t,ok){$('#bt').textContent=t;$('#bar').classList.add('on');if(ok)setTimeout(function(){if(!dirty)$('#bar').classList.remove('on')},4000)}
 
 function view(){
   var h='';
-  if(!D)return '<div class="box"><h2>Abra o dados.json</h2><p class="hint">Não consegui carregar o arquivo automaticamente (isso acontece quando a página é aberta direto do computador). Clique em “Abrir dados.json” no topo.</p></div>';
+  if(!D)return '<p class="hint">Carregando dados da planilha…</p>';
   if(tab==='chapa'){var c=D.chapa;
     h='<h2>Chapa</h2><p class="hint">Nome, lema e logo que aparecem no início do site.</p>'+
     '<div class="box"><div class="row" style="align-items:flex-start;gap:18px"><div><div class="logo" id="lp">'+(c.logo?'<img src="'+c.logo+'" alt="Logo">':'Sua logo aqui')+'</div></div><div><label class="btn s" style="cursor:pointer;display:inline-block">Enviar logo<input type="file" id="lf" accept="image/*" hidden></label> <button class="btn d s" data-act="nologo">Remover</button><p class="hint" style="margin-top:10px">PNG, JPG ou SVG. A imagem é reduzida automaticamente.</p></div></div></div>'+
@@ -100,8 +102,8 @@ function view(){
     D.propostas.forEach(function(p,i){var b='propostas.'+i+'.';
       h+='<details style="animation-delay:'+Math.min(i,10)*30+'ms"><summary><span>'+esc(p.i)+' '+esc(p.t)+'</span><em style="background:'+(D.areas[p.a]||'#ccc')+'">'+esc(p.a)+'</em></summary><div class="g">'+
       inp(b+'i',p.i,'Emoji')+inp(b+'t',p.t,'Título')+inp(b+'s',p.s,'Resumo (uma frase)',{w:1})+
-      '<label class="f"><span>Área</span><select data-p="'+b+'a">'+Object.keys(D.areas).map(function(a){return '<option'+(a===p.a?' selected':'')+'>'+esc(a)+'</option>'}).join('')+'</select></label>'+inp(b+'w',p.w,'Prazo',{ph:'Em até 90 dias'})+
-      inp(b+'d',(p.d||[]).join('\n'),'Tópicos (um por linha)',{ta:4,m:'lines',w:1})+
+      '<label class="f"><span>Área</span><select data-p="'+b+'a">'+Object.keys(D.areas).map(function(a){return '<option'+(a===p.a?' selected':'')+'>'+esc(a)+'</option>'}).join('')+'</select></label>'+inp(b+'w',p.w,'Prazo',{ph:'Em até 90 dias'})+'<label class="f"><span>Mostrar no site</span><select data-p="'+b+'m"><option value="true">Sim</option><option value="false"'+(p.m===false||p.m==="false"?' selected':'')+'>Não</option></select></label>'+
+      inp(b+'d',(p.d||[]).join('\n'),'Tópicos (um por linha, até 4)',{ta:4,m:'lines',w:1})+
       '<div class="row w"><button class="btn o s" data-act="up" data-l="propostas" data-i="'+i+'">↑ Subir</button><button class="btn o s" data-act="down" data-l="propostas" data-i="'+i+'">↓ Descer</button><button class="btn d s" data-act="del" data-l="propostas" data-i="'+i+'">Excluir</button></div></div></details>'});
     h+='<button class="btn" data-act="addp">+ Nova proposta</button>'}
   if(tab==='areas'){
@@ -120,40 +122,19 @@ function view(){
     h='<h2>Diretoria</h2><p class="hint">Deixe o nome vazio para mostrar “Nome em breve”.</p>';
     D.diretoria.forEach(function(r,i){h+='<div class="line">'+inp('diretoria.'+i+'.0',r[0],'Cargo')+inp('diretoria.'+i+'.1',r[1],'Nome completo')+'<button class="btn d s" data-act="del" data-l="diretoria" data-i="'+i+'">✕</button></div>'});
     h+='<button class="btn" data-act="addd">+ Novo cargo</button>'}
-  if(tab==='pub'){var g=ld();
-    h='<h2>Publicar</h2><p class="hint">Duas formas de levar as mudanças para o GitHub.</p>'+
-    '<div class="box"><b>1. Direto pelo painel</b><p class="hint">Use um token do GitHub com permissão de escrever em Contents só neste repositório. Ele não fica salvo.</p><div class="g">'+
-    '<label class="f"><span>Usuário ou organização</span><input id="go" value="'+esc(g.o)+'"></label><label class="f"><span>Repositório</span><input id="gr" value="'+esc(g.r)+'"></label>'+
-    '<label class="f"><span>Branch</span><input id="gb" value="'+esc(g.b||'main')+'"></label><label class="f"><span>Arquivo</span><input id="gp" value="'+esc(g.p||'dados.json')+'"></label>'+
-    '<label class="f w"><span>Token</span><input id="gt" type="password" autocomplete="off"></label></div><button class="btn" data-act="gh">Publicar no GitHub</button></div>'+
-    '<div class="box"><b>2. Manualmente</b><p class="hint">Baixe o arquivo e substitua o dados.json no repositório.</p><div class="row"><button class="btn y" data-act="dl">Baixar dados.json</button><button class="btn o" data-act="cp">Copiar JSON</button></div></div><div id="msg"></div>'}
   return h}
-function ld(){try{return JSON.parse(localStorage.getItem('gh')||'{}')}catch(e){return{}}}
 function render(){
   $('#nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===tab?'on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('');
   var m=$('#m');m.style.animation='none';m.offsetWidth;m.style.animation='';m.innerHTML=view()}
 function load(d){D=d;D.chapa=D.chapa||{};D.areas=D.areas||{};D.propostas=D.propostas||[];D.cronograma=D.cronograma||[];D.diretoria=D.diretoria||[];D.pilares=D.pilares||[];dirty=false;$('#bar').classList.remove('on');render()}
 function json(){return JSON.stringify(D,null,1)}
-async function gh(){
-  var o=$('#go').value.trim(),r=$('#gr').value.trim(),br=$('#gb').value.trim()||'main',pa=$('#gp').value.trim()||'dados.json',tk=$('#gt').value.trim();
-  if(!o||!r||!tk)return msg('Preencha usuário, repositório e token.');
-  try{localStorage.setItem('gh',JSON.stringify({o:o,r:r,b:br,p:pa}))}catch(e){}
-  var u='https://api.github.com/repos/'+o+'/'+r+'/contents/'+pa,h={Authorization:'Bearer '+tk,Accept:'application/vnd.github+json'};
-  msg('Enviando…');
-  try{var sha,g=await fetch(u+'?ref='+br,{headers:h});
-    if(g.ok)sha=(await g.json()).sha;else if(g.status!==404)throw new Error('O GitHub respondeu '+g.status+' ao ler o arquivo. Confira usuário, repositório e token.');
-    var b={message:'Atualiza propostas pelo painel',content:btoa(unescape(encodeURIComponent(json()))),branch:br};if(sha)b.sha=sha;
-    var p=await fetch(u,{method:'PUT',headers:h,body:JSON.stringify(b)});
-    if(!p.ok)throw new Error('O GitHub respondeu '+p.status+'. O token precisa de permissão de escrita em Contents.');
-    dirty=false;$('#bar').classList.remove('on');msg('Publicado! O site atualiza em cerca de 1 minuto.',1)}catch(e){msg(e.message)}}
-function shrink(file){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,320/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);D.chapa.logo=c.toDataURL('image/webp',.9);mark();render()};im.src=fr.result};fr.readAsDataURL(file)}
+function shrink(file){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,256/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);D.chapa.logo=c.toDataURL('image/webp',.8);if(D.chapa.logo.length>45000){D.chapa.logo='';alert('Imagem muito pesada. Use uma logo mais simples ou menor.')}mark();render()};im.src=fr.result};fr.readAsDataURL(file)}
 
 document.addEventListener('input',function(e){var t=e.target;
   if(t.dataset.p)setP(t.dataset.p,t.value,t.dataset.m);
   if(t.dataset.ac){D.areas[t.dataset.ac]=t.value;mark()}});
 document.addEventListener('change',function(e){var t=e.target;
   if(t.id==='lf'&&t.files[0])shrink(t.files[0]);
-  if(t.id==='imp'&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{load(JSON.parse(fr.result))}catch(x){alert('Arquivo inválido.')}};fr.readAsText(t.files[0])}
   if(t.dataset.ar){var n=t.value.trim(),o=t.dataset.ar;if(!n||n===o||D.areas[n]){t.value=o;return}
     var na={};Object.keys(D.areas).forEach(function(k){na[k===o?n:k]=D.areas[k]});D.areas=na;D.propostas.forEach(function(p){if(p.a===o)p.a=n});mark();render()}});
 document.addEventListener('click',function(e){
@@ -170,13 +151,23 @@ document.addEventListener('click',function(e){
   else if(a==='adda'){var n='Nova área',k=1;while(D.areas[n])n='Nova área '+(++k);D.areas[n]='#009C3B'}
   else if(a==='dela'){var nm=t.dataset.n;if(D.propostas.some(function(p){return p.a===nm}))return alert('Essa área ainda tem propostas. Mova ou exclua as propostas primeiro.');delete D.areas[nm]}
   else if(a==='nologo')D.chapa.logo=''
-  else if(a==='gh')return gh()
-  else if(a==='dl'){var b=new Blob([json()],{type:'application/json'}),u=document.createElement('a');u.href=URL.createObjectURL(b);u.download='dados.json';u.click();return}
-  else if(a==='cp'){navigator.clipboard.writeText(json()).then(function(){msg('JSON copiado.',1)},function(){msg('Não foi possível copiar. Use o download.')});return}
+  else if(a==='save')return salvar()
   else return;
   mark();render()});
 addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
-fetch('dados.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(load).catch(function(){render()});
+function entrar(){
+  if(!PW)return trava('');
+  api({acao:'ler',senha:PW}).then(function(r){
+    if(r.ok){document.getElementById('lock').hidden=true;load(r.dados)}
+    else{PW='';try{sessionStorage.removeItem('adm_pw')}catch(e){}trava(r.erro)}
+  }).catch(function(){trava('Não consegui falar com a planilha. Confira a conexão e tente de novo.')})}
+function salvar(){
+  var b=$('#sv');b.disabled=true;$('#bt').textContent='Salvando…';$('#bar').classList.add('on');
+  api({acao:'salvar',senha:PW,dados:D}).then(function(r){
+    b.disabled=false;
+    if(r.ok){dirty=false;msg('Salvo na planilha! O site atualiza em cerca de 1 minuto.',1)}else msg(r.erro||'Não foi possível salvar.')
+  }).catch(function(){b.disabled=false;msg('Falha de conexão. Tente salvar de novo.')})}
+render();entrar();
 </script>
 </body>
 </html>
