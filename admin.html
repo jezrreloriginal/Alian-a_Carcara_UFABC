@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel da chapa</title>
+<style>
+:root{--v:#009C3B;--a:#FFDF00;--z:#002776;--bg:#F2F7F3;--line:#D3E1D7;--ink:#0B1B3F}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,'Segoe UI',sans-serif}
+header{background:var(--z);color:#fff;padding:16px 16px 0;position:sticky;top:0;z-index:5;border-bottom:5px solid var(--v)}
+.top{display:flex;align-items:center;gap:14px;max-width:960px;margin:auto}
+.mark{width:46px;height:46px;background:var(--v);border-radius:12px;display:grid;place-items:center;flex:none;animation:spin 14s linear infinite}
+.mark i{width:26px;height:26px;background:var(--a);transform:rotate(45deg);display:grid;place-items:center;border-radius:3px}
+.mark i::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--z)}
+@keyframes spin{50%{transform:rotate(8deg) scale(1.08)}}
+h1{font-size:1.15rem;margin:0}.top p{margin:0;font-size:.85rem;opacity:.8}
+.top .sp{flex:1}
+nav{display:flex;gap:4px;overflow-x:auto;max-width:960px;margin:14px auto 0}
+nav button{border:0;background:transparent;color:#fff;padding:10px 16px;font:600 .95rem system-ui,sans-serif;border-radius:12px 12px 0 0;cursor:pointer;white-space:nowrap;transition:background .2s}
+nav button:hover{background:rgba(255,255,255,.12)}
+nav button.on{background:var(--bg);color:var(--z);box-shadow:inset 0 4px var(--a)}
+main{max-width:960px;margin:auto;padding:22px 16px 90px;animation:in .4s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}}
+h2{margin:0 0 4px;font-size:1.5rem;color:var(--z)}.hint{color:#4C5C7A;margin:0 0 20px}
+.f{display:block;margin:0 0 14px}.f span{display:block;font-weight:600;font-size:.85rem;margin-bottom:4px}
+input,textarea,select{width:100%;padding:10px 12px;border:2px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus,button:focus-visible,summary:focus-visible{outline:none;border-color:var(--v);box-shadow:0 0 0 4px rgba(0,156,59,.2)}
+input[type=color]{padding:2px;height:44px;width:64px}
+.btn{border:0;background:var(--v);color:#fff;padding:11px 20px;border-radius:99px;font:600 .95rem system-ui,sans-serif;cursor:pointer;transition:transform .15s,background .2s}
+.btn:hover{transform:translateY(-2px);background:#00822F}.btn:active{transform:scale(.95)}
+.btn.y{background:var(--a);color:var(--z)}.btn.y:hover{background:#F2D200}
+.btn.o{background:#fff;color:var(--z);border:2px solid var(--z)}.btn.d{background:#fff;color:#B3261E;border:2px solid #F1C7C4}
+.btn.s{padding:7px 14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+details{background:#fff;border:2px solid var(--line);border-radius:18px;margin-bottom:10px;animation:in .35s both;overflow:hidden}
+details[open]{border-color:var(--v)}
+summary{padding:14px 18px;cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:space-between;font-weight:600;list-style:none}
+summary em{font-style:normal;font-size:.78rem;padding:3px 12px;border-radius:99px;color:#0B1B3F}
+.g{padding:4px 18px 18px;display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.g .w{grid-column:1/-1}
+@media(max-width:600px){.g{grid-template-columns:1fr}}
+.line{display:grid;grid-template-columns:1fr 2fr auto;gap:8px;margin-bottom:8px;align-items:center;animation:in .3s both}
+.arow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.logo{width:120px;height:120px;border:2px dashed var(--v);border-radius:20px;display:grid;place-items:center;background:#fff;overflow:hidden;color:var(--v);font-weight:600;text-align:center;font-size:.85rem}
+.logo img{width:100%;height:100%;object-fit:contain}
+.box{background:#fff;border:2px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+.msg{padding:12px 16px;border-radius:12px;margin-top:12px;background:#FFF6BF;animation:in .3s}.msg.ok{background:#CFEFD9}
+.bar{position:fixed;bottom:0;left:0;right:0;background:var(--z);color:#fff;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center;transform:translateY(100%);transition:transform .35s}
+.bar.on{transform:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><div class="mark"><i></i></div><div><h1>Painel da chapa</h1><p id="sub">Edite e publique o site</p></div><div class="sp"></div>
+  <label class="btn y s" style="cursor:pointer">Abrir dados.json<input type="file" id="imp" accept=".json,application/json" hidden></label></div>
+  <nav id="nav"></nav>
+</header>
+<main id="m"><p class="hint">Carregando…</p></main>
+<div class="bar" id="bar">Você tem alterações não publicadas <button class="btn y s" data-go="pub">Publicar</button></div>
+
+<script>
+var D=null,dirty=false,tab='chapa';
+var TABS=[['chapa','Chapa'],['prop','Propostas'],['areas','Áreas'],['cron','Cronograma'],['dir','Diretoria'],['pub','Publicar']];
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function inp(p,v,l,o){o=o||{};var a=' data-p="'+p+'"'+(o.m?' data-m="'+o.m+'"':'');
+  return '<label class="f'+(o.w?' w':'')+'"><span>'+l+'</span>'+(o.ta?'<textarea rows="'+o.ta+'"'+a+'>'+esc(v)+'</textarea>':'<input'+a+' value="'+esc(v)+'"'+(o.ph?' placeholder="'+esc(o.ph)+'"':'')+'>')+'</label>'}
+function setP(p,v,m){var k=p.split('.'),o=D;for(var i=0;i<k.length-1;i++)o=o[k[i]];
+  if(m==='lines')v=v.split('\n').map(function(x){return x.trim()}).filter(Boolean);
+  if(m==='csv')v=v.split(',').map(function(x){return x.trim()}).filter(Boolean);
+  o[k[k.length-1]]=v;mark()}
+function mark(){dirty=true;$('#bar').classList.add('on')}
+function msg(t,ok){var e=$('#msg');if(e){e.className='msg'+(ok?' ok':'');e.textContent=t}}
+
+function view(){
+  var h='';
+  if(!D)return '<div class="box"><h2>Abra o dados.json</h2><p class="hint">Não consegui carregar o arquivo automaticamente (isso acontece quando a página é aberta direto do computador). Clique em “Abrir dados.json” no topo.</p></div>';
+  if(tab==='chapa'){var c=D.chapa;
+    h='<h2>Chapa</h2><p class="hint">Nome, lema e logo que aparecem no início do site.</p>'+
+    '<div class="box"><div class="row" style="align-items:flex-start;gap:18px"><div><div class="logo" id="lp">'+(c.logo?'<img src="'+c.logo+'" alt="Logo">':'Sua logo aqui')+'</div></div><div><label class="btn s" style="cursor:pointer;display:inline-block">Enviar logo<input type="file" id="lf" accept="image/*" hidden></label> <button class="btn d s" data-act="nologo">Remover</button><p class="hint" style="margin-top:10px">PNG, JPG ou SVG. A imagem é reduzida automaticamente.</p></div></div></div>'+
+    '<div class="box">'+inp('chapa.nome',c.nome,'Nome da chapa')+inp('chapa.lema',c.lema,'Lema (começo da frase)',{ph:'coragem para'})+inp('chapa.palavras',(c.palavras||[]).join(', '),'Palavras que alternam (separe por vírgula)',{m:'csv',ph:'mudar, ousar, ouvir'})+inp('chapa.frase',c.frase,'Frase de destaque')+'</div>'}
+  if(tab==='prop'){
+    h='<h2>Propostas</h2><p class="hint">Resumo curto no card, 3 tópicos ao abrir. Quanto mais direto, melhor.</p>';
+    D.propostas.forEach(function(p,i){var b='propostas.'+i+'.';
+      h+='<details style="animation-delay:'+Math.min(i,10)*30+'ms"><summary><span>'+esc(p.i)+' '+esc(p.t)+'</span><em style="background:'+(D.areas[p.a]||'#ccc')+'">'+esc(p.a)+'</em></summary><div class="g">'+
+      inp(b+'i',p.i,'Emoji')+inp(b+'t',p.t,'Título')+inp(b+'s',p.s,'Resumo (uma frase)',{w:1})+
+      '<label class="f"><span>Área</span><select data-p="'+b+'a">'+Object.keys(D.areas).map(function(a){return '<option'+(a===p.a?' selected':'')+'>'+esc(a)+'</option>'}).join('')+'</select></label>'+inp(b+'w',p.w,'Prazo',{ph:'Em até 90 dias'})+
+      inp(b+'d',(p.d||[]).join('\n'),'Tópicos (um por linha)',{ta:4,m:'lines',w:1})+
+      '<div class="row w"><button class="btn o s" data-act="up" data-l="propostas" data-i="'+i+'">↑ Subir</button><button class="btn o s" data-act="down" data-l="propostas" data-i="'+i+'">↓ Descer</button><button class="btn d s" data-act="del" data-l="propostas" data-i="'+i+'">Excluir</button></div></div></details>'});
+    h+='<button class="btn" data-act="addp">+ Nova proposta</button>'}
+  if(tab==='areas'){
+    h='<h2>Áreas</h2><p class="hint">Os filtros do site. A cor aparece no topo dos cards.</p>';
+    Object.keys(D.areas).forEach(function(a){h+='<div class="arow"><input type="color" value="'+D.areas[a]+'" data-ac="'+esc(a)+'"><input value="'+esc(a)+'" data-ar="'+esc(a)+'"><button class="btn d s" data-act="dela" data-n="'+esc(a)+'">Excluir</button></div>'});
+    h+='<button class="btn" data-act="adda">+ Nova área</button>'}
+  if(tab==='cron'){
+    h='<h2>Cronograma</h2><p class="hint">Linha do tempo do site, na ordem em que aparece.</p>';
+    D.cronograma.forEach(function(r,i){h+='<div class="line">'+inp('cronograma.'+i+'.0',r[0],'Quando')+inp('cronograma.'+i+'.1',r[1],'O que acontece')+'<button class="btn d s" data-act="del" data-l="cronograma" data-i="'+i+'">✕</button></div>'});
+    h+='<button class="btn" data-act="addc">+ Nova etapa</button>'}
+  if(tab==='dir'){
+    h='<h2>Diretoria</h2><p class="hint">Deixe o nome vazio para mostrar “Nome em breve”.</p>';
+    D.diretoria.forEach(function(r,i){h+='<div class="line">'+inp('diretoria.'+i+'.0',r[0],'Cargo')+inp('diretoria.'+i+'.1',r[1],'Nome completo')+'<button class="btn d s" data-act="del" data-l="diretoria" data-i="'+i+'">✕</button></div>'});
+    h+='<button class="btn" data-act="addd">+ Novo cargo</button>'}
+  if(tab==='pub'){var g=ld();
+    h='<h2>Publicar</h2><p class="hint">Duas formas de levar as mudanças para o GitHub.</p>'+
+    '<div class="box"><b>1. Direto pelo painel</b><p class="hint">Use um token do GitHub com permissão de escrever em Contents só neste repositório. Ele não fica salvo.</p><div class="g">'+
+    '<label class="f"><span>Usuário ou organização</span><input id="go" value="'+esc(g.o)+'"></label><label class="f"><span>Repositório</span><input id="gr" value="'+esc(g.r)+'"></label>'+
+    '<label class="f"><span>Branch</span><input id="gb" value="'+esc(g.b||'main')+'"></label><label class="f"><span>Arquivo</span><input id="gp" value="'+esc(g.p||'dados.json')+'"></label>'+
+    '<label class="f w"><span>Token</span><input id="gt" type="password" autocomplete="off"></label></div><button class="btn" data-act="gh">Publicar no GitHub</button></div>'+
+    '<div class="box"><b>2. Manualmente</b><p class="hint">Baixe o arquivo e substitua o dados.json no repositório.</p><div class="row"><button class="btn y" data-act="dl">Baixar dados.json</button><button class="btn o" data-act="cp">Copiar JSON</button></div></div><div id="msg"></div>'}
+  return h}
+function ld(){try{return JSON.parse(localStorage.getItem('gh')||'{}')}catch(e){return{}}}
+function render(){
+  $('#nav').innerHTML=TABS.map(function(t){return '<button class="'+(t[0]===tab?'on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>'}).join('');
+  var m=$('#m');m.style.animation='none';m.offsetWidth;m.style.animation='';m.innerHTML=view()}
+function load(d){D=d;D.chapa=D.chapa||{};D.areas=D.areas||{};D.propostas=D.propostas||[];D.cronograma=D.cronograma||[];D.diretoria=D.diretoria||[];dirty=false;$('#bar').classList.remove('on');render()}
+function json(){return JSON.stringify(D,null,1)}
+async function gh(){
+  var o=$('#go').value.trim(),r=$('#gr').value.trim(),br=$('#gb').value.trim()||'main',pa=$('#gp').value.trim()||'dados.json',tk=$('#gt').value.trim();
+  if(!o||!r||!tk)return msg('Preencha usuário, repositório e token.');
+  try{localStorage.setItem('gh',JSON.stringify({o:o,r:r,b:br,p:pa}))}catch(e){}
+  var u='https://api.github.com/repos/'+o+'/'+r+'/contents/'+pa,h={Authorization:'Bearer '+tk,Accept:'application/vnd.github+json'};
+  msg('Enviando…');
+  try{var sha,g=await fetch(u+'?ref='+br,{headers:h});
+    if(g.ok)sha=(await g.json()).sha;else if(g.status!==404)throw new Error('O GitHub respondeu '+g.status+' ao ler o arquivo. Confira usuário, repositório e token.');
+    var b={message:'Atualiza propostas pelo painel',content:btoa(unescape(encodeURIComponent(json()))),branch:br};if(sha)b.sha=sha;
+    var p=await fetch(u,{method:'PUT',headers:h,body:JSON.stringify(b)});
+    if(!p.ok)throw new Error('O GitHub respondeu '+p.status+'. O token precisa de permissão de escrita em Contents.');
+    dirty=false;$('#bar').classList.remove('on');msg('Publicado! O site atualiza em cerca de 1 minuto.',1)}catch(e){msg(e.message)}}
+function shrink(file){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,320/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);D.chapa.logo=c.toDataURL('image/webp',.9);mark();render()};im.src=fr.result};fr.readAsDataURL(file)}
+
+document.addEventListener('input',function(e){var t=e.target;
+  if(t.dataset.p)setP(t.dataset.p,t.value,t.dataset.m);
+  if(t.dataset.ac){D.areas[t.dataset.ac]=t.value;mark()}});
+document.addEventListener('change',function(e){var t=e.target;
+  if(t.id==='lf'&&t.files[0])shrink(t.files[0]);
+  if(t.id==='imp'&&t.files[0]){var fr=new FileReader();fr.onload=function(){try{load(JSON.parse(fr.result))}catch(x){alert('Arquivo inválido.')}};fr.readAsText(t.files[0])}
+  if(t.dataset.ar){var n=t.value.trim(),o=t.dataset.ar;if(!n||n===o||D.areas[n]){t.value=o;return}
+    var na={};Object.keys(D.areas).forEach(function(k){na[k===o?n:k]=D.areas[k]});D.areas=na;D.propostas.forEach(function(p){if(p.a===o)p.a=n});mark();render()}});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-tab],[data-go],[data-act]');if(!t)return;
+  if(t.dataset.tab||t.dataset.go){tab=t.dataset.tab||t.dataset.go;render();return}
+  var a=t.dataset.act,l=t.dataset.l&&D[t.dataset.l],i=+t.dataset.i;
+  if(a==='up'&&i>0){l.splice(i-1,0,l.splice(i,1)[0])}
+  else if(a==='down'&&i<l.length-1){l.splice(i+1,0,l.splice(i,1)[0])}
+  else if(a==='del'){if(!confirm('Excluir este item?'))return;l.splice(i,1)}
+  else if(a==='addp'){D.propostas.push({id:Date.now(),a:Object.keys(D.areas)[0]||'',i:'✨',t:'Nova proposta',s:'',d:[],w:''})}
+  else if(a==='addc')D.cronograma.push(['',''])
+  else if(a==='addd')D.diretoria.push(['',''])
+  else if(a==='adda'){var n='Nova área',k=1;while(D.areas[n])n='Nova área '+(++k);D.areas[n]='#009C3B'}
+  else if(a==='dela'){var nm=t.dataset.n;if(D.propostas.some(function(p){return p.a===nm}))return alert('Essa área ainda tem propostas. Mova ou exclua as propostas primeiro.');delete D.areas[nm]}
+  else if(a==='nologo')D.chapa.logo=''
+  else if(a==='gh')return gh()
+  else if(a==='dl'){var b=new Blob([json()],{type:'application/json'}),u=document.createElement('a');u.href=URL.createObjectURL(b);u.download='dados.json';u.click();return}
+  else if(a==='cp'){navigator.clipboard.writeText(json()).then(function(){msg('JSON copiado.',1)},function(){msg('Não foi possível copiar. Use o download.')});return}
+  else return;
+  mark();render()});
+addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
+fetch('dados.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(load).catch(function(){render()});
+</script>
+</body>
+</html>

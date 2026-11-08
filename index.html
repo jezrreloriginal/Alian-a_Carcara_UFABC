@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aliança Carcará – Nossas propostas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F6FC;--ink:#10143F;--mute:#5B6090;--card:#fff;--line:#DDE0F3;--blue:#2D3BFF;--sun:#FFC93C;--mint:#14B88F;--pink:#FF5C8A;--sans:'Figtree',system-ui,sans-serif;--disp:'Bricolage Grotesque','Figtree',system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C0F33;--ink:#F1F2FF;--mute:#9EA4DB;--card:#161A4E;--line:#2A2F78;--blue:#6C78FF}}
+:root[data-theme="dark"]{--bg:#0C0F33;--ink:#F1F2FF;--mute:#9EA4DB;--card:#161A4E;--line:#2A2F78;--blue:#6C78FF}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.5 var(--sans);overflow-x:hidden}
+h1,h2,h3{font-family:var(--disp);margin:0;line-height:1}
+section{padding:72px 20px;max-width:1100px;margin:auto}
+/* hero */
+.hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative}
+.hero h1{font-size:clamp(2.6rem,10vw,7rem);font-weight:800;letter-spacing:-.04em}
+.word{display:inline-block;height:1.05em;overflow:hidden;vertical-align:bottom;color:var(--blue)}
+.word span{display:block}
+@keyframes wordin{from{transform:translateY(100%);opacity:0}}
+.logo{width:96px;height:96px;object-fit:contain;margin-bottom:18px;animation:pop .6s both}
+@keyframes roll{0%,28%{transform:translateY(0)}33%,61%{transform:translateY(-1.05em)}66%,94%{transform:translateY(-2.1em)}100%{transform:translateY(-3.15em)}}
+.hero p{font-size:1.2rem;color:var(--mute);max-width:30ch;margin:22px 0 28px}
+.slogan{font:800 clamp(1.7rem,6.5vw,3.2rem)/1.05 var(--disp);margin-top:18px;letter-spacing:-.02em}
+.b1{display:grid;place-items:center;font-size:5rem;font-style:normal}
+.cta{display:inline-block;background:var(--ink);color:var(--bg);padding:14px 26px;border-radius:99px;font-weight:600;text-decoration:none;transition:transform .25s}
+.cta:hover{transform:scale(1.07) rotate(-2deg)}
+.blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.9;animation:float 7s ease-in-out infinite;z-index:-1}
+.b1{width:180px;height:180px;background:var(--sun);right:6%;top:12%}
+.b2{width:90px;height:90px;background:var(--pink);right:24%;top:52%;animation-delay:-2s}
+.b3{width:130px;height:130px;background:var(--mint);right:4%;bottom:8%;border-radius:36% 64% 60% 40%;animation-delay:-4s}
+@keyframes float{50%{transform:translateY(-28px) rotate(12deg)}}
+.hint{position:absolute;bottom:18px;left:20px;color:var(--mute);animation:bob 1.6s infinite}
+@keyframes bob{50%{transform:translateY(8px)}}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px}
+.stat b{font:800 clamp(2.4rem,6vw,3.6rem)/1 var(--disp);display:block}
+.stat span{color:var(--mute)}
+.stat:nth-child(1) b{color:var(--blue)}.stat:nth-child(2) b{color:var(--mint)}.stat:nth-child(3) b{color:var(--pink)}
+/* filters */
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 8px;align-items:center}
+.chip{border:2px solid var(--line);background:var(--card);color:var(--ink);padding:9px 18px;border-radius:99px;font:600 .95rem var(--sans);cursor:pointer;transition:all .25s}
+.chip:hover{transform:translateY(-3px)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff;transform:scale(1.06)}
+.search{flex:1;min-width:150px;border:2px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:99px;font:inherit}
+.search:focus,.chip:focus-visible,.cta:focus-visible,.like:focus-visible,.card:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;cursor:pointer;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;animation:pop .5s both;text-align:left;color:inherit;font:inherit}
+.card::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--c)}
+.card:hover{transform:translateY(-8px) rotate(-1deg);box-shadow:0 18px 30px -18px var(--c)}
+.card .ico{font-size:2.2rem;display:inline-block;transition:transform .4s}
+.card:hover .ico{transform:scale(1.3) rotate(-12deg)}
+.card h3{font-size:1.4rem;margin:12px 0 8px}
+.card p{margin:0;color:var(--mute)}
+.tag{display:inline-block;margin-top:14px;font-size:.8rem;font-weight:600;padding:4px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--ink)}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.92)}}
+.empty{color:var(--mute);padding:30px 0;display:none}
+/* modal */
+dialog{border:0;border-radius:28px;padding:0;max-width:460px;width:calc(100% - 32px);background:var(--card);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog[open]{animation:zoom .4s cubic-bezier(.2,1.3,.4,1)}
+dialog::backdrop{background:rgba(10,12,50,.6);backdrop-filter:blur(4px)}
+@keyframes zoom{from{opacity:0;transform:scale(.7) rotate(-4deg)}}
+.mh{padding:28px;background:var(--c);color:#10143F}
+.mh .ico{font-size:3rem}.mh h3{font-size:1.9rem;margin-top:8px}
+.mb{padding:24px 28px 28px}
+.mb ul{list-style:none;margin:0 0 20px;padding:0}
+.mb li{padding:10px 0 10px 34px;position:relative;opacity:0;animation:slide .5s forwards}
+.mb li::before{content:"✓";position:absolute;left:0;top:9px;width:24px;height:24px;border-radius:50%;background:var(--mint);color:#fff;text-align:center;font-size:.8rem;line-height:24px}
+@keyframes slide{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.like{border:2px solid var(--pink);background:transparent;color:var(--ink);border-radius:99px;padding:10px 20px;font:600 1rem var(--sans);cursor:pointer;position:relative;transition:transform .2s}
+.like:active{transform:scale(.9)}.like.on{background:var(--pink);color:#fff}
+.x{background:none;border:0;color:var(--mute);font:inherit;cursor:pointer;padding:10px}
+.spark{position:fixed;width:10px;height:10px;border-radius:50%;pointer-events:none;z-index:99;animation:fly .8s ease-out forwards}
+@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+/* roadmap */
+.road{position:relative;margin-top:36px;display:flex;flex-direction:column;gap:26px;padding-left:34px}
+.road::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:4px;border-radius:4px;background:var(--line)}
+.road::after{content:"";position:absolute;left:11px;top:0;width:4px;border-radius:4px;background:var(--blue);height:var(--p,0%);transition:height .2s}
+.step{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 22px;opacity:0;transform:translateX(40px);transition:all .6s}
+.step.in{opacity:1;transform:none}
+.step::before{content:"";position:absolute;left:-31px;top:24px;width:18px;height:18px;border-radius:50%;background:var(--sun);border:4px solid var(--bg)}
+.step b{font:800 1.2rem var(--disp)}.step span{display:block;color:var(--mute)}
+/* team */
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px;margin-top:30px}
+.p{text-align:center;transition:transform .3s}.p:hover{transform:translateY(-8px)}
+.av{width:96px;height:96px;border-radius:38% 62% 55% 45%;margin:0 auto 10px;display:grid;place-items:center;font:800 2rem var(--disp);color:#10143F;animation:morph 6s ease-in-out infinite}
+@keyframes morph{50%{border-radius:60% 40% 42% 58%}}
+.p small{color:var(--mute)}
+.pil{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:28px}
+.pl{border-radius:28px;padding:28px;color:#10143F;font-size:1.15rem;transition:transform .35s,opacity .7s}
+.pl.in:hover{transform:rotate(-2deg) scale(1.04)}
+.pl b{font:800 2.2rem/1 var(--disp);display:block;margin:10px 0 8px}
+footer{text-align:center;padding:60px 20px 80px}
+footer h2{font-size:clamp(2rem,7vw,4rem);margin-bottom:20px}
+.rv{opacity:0;transform:translateY(30px);transition:all .7s}.rv.in{opacity:1;transform:none}
+h2.t{font-size:clamp(2rem,6vw,3.4rem);letter-spacing:-.03em}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.word span{animation:none}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <i class="blob b1">🦅</i><i class="blob b2"></i><i class="blob b3"></i>
+  <img class="logo" id="logo" alt="Logo da chapa" hidden><h1 id="nome">Aliança<br>Carcará</h1>
+  <div class="slogan"><span id="lema">coragem para</span> <span class="word"><span id="pal">mudar.</span></span></div>
+  <p id="frase">Uma universidade, muitas vozes. Um DCE para todos.</p>
+  <div><a class="cta" href="#propostas">Ver propostas</a></div>
+  <div class="hint">role ↓</div>
+</section>
+
+<section class="rv">
+  <div class="stats">
+    <div class="stat"><b data-n="0" id="nTotal">0</b><span>propostas</span></div>
+    <div class="stat"><b data-n="6">0</b><span>áreas</span></div>
+    <div class="stat"><b id="nLikes">0</b><span>apoios seus</span></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t rv">Nossos 3 pilares</h2>
+  <div class="pil">
+    <div class="pl rv" style="background:#FFC93C">🗣️<b>Pluralidade</b>Todos têm voz.</div>
+    <div class="pl rv" style="background:#14B88F;transition-delay:.15s">🎓<b>Prioridade</b>O estudante vem primeiro.</div>
+    <div class="pl rv" style="background:#FF5C8A;transition-delay:.3s">🤲<b>Participação</b>Todos constroem juntos.</div>
+  </div>
+</section>
+
+<section id="propostas">
+  <h2 class="t rv">O que vamos fazer</h2>
+  <div class="bar rv">
+    <div id="chips" style="display:contents"></div>
+    <input class="search" id="q" type="search" placeholder="Buscar proposta…" aria-label="Buscar proposta">
+  </div>
+  <div class="grid" id="grid"></div>
+  <p class="empty" id="empty">Nenhuma proposta encontrada. Tente outra palavra.</p>
+</section>
+
+<section>
+  <h2 class="t rv">Quando</h2>
+  <div class="road" id="road"></div>
+</section>
+
+<section>
+  <h2 class="t rv">A diretoria</h2>
+  <div class="team" id="team"></div>
+</section>
+
+<footer class="rv">
+  <h2 id="fim">Aliança Carcará: coragem para mudar</h2>
+  <a class="cta" href="#propostas">Escolher minhas favoritas</a>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dt">
+  <div class="mh"><div class="ico" id="di"></div><h3 id="dt"></h3></div>
+  <div class="mb"><ul id="dl"></ul>
+    <div class="row"><button class="like" id="dk">♥ Apoiar</button><button class="x" id="dx">Fechar</button></div>
+  </div>
+</dialog>
+
+<script>
+/* ====== EDITE AQUI: suas propostas ====== */
+var AREAS={'Gestão':'#7F8BFF','Acadêmico':'#FFC93C','Cultura e Esporte':'#FF5C8A','Diversidade':'#B58CFF','Infraestrutura':'#14B88F','Entidades':'#FF9A5C'};
+var P=[
+{id:1,a:'Gestão',i:'🔍',t:'Transparência total',s:'Cada real e cada ação, à vista de todos.',d:['Balancete publicado todo mês, até o dia 5','Relatório de atividades a cada quadrimestre','Portal público com atas e documentos'],w:'Todo mês'},
+{id:2,a:'Gestão',i:'💬',t:'Atendimento e reuniões abertas',s:'Sua demanda tem resposta e acompanhamento.',d:['Canais oficiais e plantões nos dois campi','Toda demanda vai para a diretoria certa','Reuniões abertas com pauta divulgada'],w:'Primeiros 60 dias'},
+{id:3,a:'Acadêmico',i:'🤝',t:'Defesa dos direitos discentes',s:'Mediação e orientação, não só reclamação.',d:['Diálogo direto com coordenações e setores','Orientação sobre direitos e deveres','Acompanhamento até a solução'],w:'Primeiros 60 dias'},
+{id:4,a:'Acadêmico',i:'📅',t:'Ferramenta de prazos',s:'Nunca mais perder rematrícula ou trancamento.',d:['Calendário acadêmico claro e antecipado','Parceria com a tecnologia da UFABC','Avisos de ajustes, trancamentos e jubilamento'],w:'Primeiros 60 dias'},
+{id:5,a:'Acadêmico',i:'🧾',t:'Auxílios sem enrolação',s:'Editais explicados e orientação passo a passo.',d:['Divulgação de prazos e documentos','Ajuda na solicitação e na renovação','Defesa de mais alimentação, moradia e transporte'],w:'Durante todo o mandato'},
+{id:6,a:'Acadêmico',i:'♿',t:'Provas acessíveis',s:'Um espaço adequado para avaliar com equidade.',d:['Parceria com a Monitoria Inclusiva','Local acolhedor para provas e atividades','Adaptações respeitando cada caso'],w:'Em até 90 dias'},
+{id:7,a:'Acadêmico',i:'🍛',t:'RU acessível',s:'Refeição boa, a preço justo.',d:['Mais recursos da universidade no custo da refeição','Participação do CAFRU nas discussões','Abaixo-assinados e mobilização coletiva'],w:'No 1º semestre'},
+{id:8,a:'Acadêmico',i:'🔬',t:'Iniciação científica para todos',s:'Descubra laboratórios e orientadores.',d:['Feiras de divulgação científica','Catálogo digital de laboratórios','Foco em ingressantes e quem nunca fez pesquisa'],w:'Durante todo o mandato'},
+{id:9,a:'Cultura e Esporte',i:'🏆',t:'RUDIC UFABC',s:'Esporte, ciência, cultura e mídia numa só rede.',d:['4 eixos: esportivo, científico, cultural e midiático','Atléticas, CAs, coletivos e independentes juntos','Pontuação geral e Troféu RUDIC'],w:'No 1º semestre'},
+{id:10,a:'Cultura e Esporte',i:'👋',t:'Recepção de ingressantes',s:'Boas-vindas a cada quadrimestre.',d:['Atividades culturais, esportivas e solidárias','Feita junto com CAs e Atléticas','Medimos participantes e doações'],w:'A cada quadrimestre'},
+{id:11,a:'Cultura e Esporte',i:'🧠',t:'Saúde mental e bem-estar',s:'Apoio forte nas semanas de prova.',d:['Rodas de conversa e ações de acolhimento','Combate ao esgotamento acadêmico','Parcerias com setores especializados'],w:'Durante todo o mandato'},
+{id:12,a:'Diversidade',i:'🛡️',t:'Acolhimento e denúncias',s:'Canais seguros para quem sofreu violência.',d:['Atendimento confidencial e orientação','Ponte com as instâncias oficiais','Relatórios sem expor ninguém'],w:'Em até 120 dias'},
+{id:13,a:'Diversidade',i:'🌈',t:'Campanhas contra a discriminação',s:'Respeito se constrói todo dia.',d:['Contra assédio, racismo, machismo e LGBTfobia','Contra xenofobia e outras violências','Rodas de conversa e materiais educativos'],w:'Durante todo o mandato'},
+{id:14,a:'Diversidade',i:'✊',t:'Cotistas, indígenas e quilombolas',s:'Permanência e voz nas decisões do DCE.',d:['Defesa das ações afirmativas','Escuta das dificuldades específicas','Espaço nas decisões da gestão'],w:'Durante todo o mandato'},
+{id:15,a:'Diversidade',i:'👶',t:'Pais e mães universitários',s:'Estudar e cuidar, sem abrir mão de nenhum.',d:['Levantamento das necessidades','Espaços de amamentação e cuidado infantil','Mais divulgação dos apoios existentes'],w:'Durante todo o mandato'},
+{id:16,a:'Infraestrutura',i:'🏫',t:'Mapa de problemas dos campi',s:'Sala, laboratório, banheiro: tudo registrado.',d:['Levantamento em Santo André e São Bernardo','Encaminhamento à Reitoria e direções','Painel público de demandas'],w:'Em até 90 dias'},
+{id:17,a:'Infraestrutura',i:'🌙',t:'Segurança e iluminação',s:'Campus seguro também à noite.',d:['Foco nos horários de menor circulação','Melhoria de acessos e sinalização','Diálogo com os setores responsáveis'],w:'Durante todo o mandato'},
+{id:18,a:'Infraestrutura',i:'🌱',t:'Campus sustentável',s:'Menos plástico, mais horta.',d:['Coleta seletiva','Redução de plástico descartável','Horta comunitária'],w:'Durante todo o mandato'},
+{id:19,a:'Infraestrutura',i:'🏷️',t:'Descontos no comércio do ABC',s:'Sua carteirinha rende vantagens.',d:['Restaurantes, papelarias, academias e mais','Validação simples pela identificação estudantil','Parcerias com a sociedade civil da região'],w:'Em até 120 dias'},
+{id:20,a:'Entidades',i:'🏛️',t:'Conselho de Entidades',s:'CAs, Atléticas e coletivos decidindo juntos.',d:['Cada entidade com representante e voz','Pautas públicas e atas registradas','Ajuda com burocracia e reserva de espaços'],w:'Primeiros 60 dias'},
+{id:21,a:'Entidades',i:'🚌',t:'Ônibus para atividades externas',s:'Competição e congresso sem vaquinha.',d:['Editais de apoio ao transporte institucional','Critérios transparentes e iguais para todos','Diálogo com Reitoria e Pró-Reitorias'],w:'No 1º semestre'}
+];
+var ROAD=[['Primeiros 60 dias','Canal de demandas, Conselho de Entidades e início da ferramenta de prazos'],['Até 90 dias','Levantamento dos campi e espaço para provas acessíveis'],['Até 120 dias','Fluxo de acolhimento e parcerias no comércio do ABC'],['1º semestre','RU, RUDIC e recepção de ingressantes'],['Sempre','Balancete todo mês e relatório a cada quadrimestre']];
+var TEAM=[['Presidência','Nome em breve'],['Vice-Presidência','Nome em breve'],['Tesouraria','Nome em breve'],['1ª Tesouraria','Nome em breve'],['Secretaria-Geral','Nome em breve'],['Cultural e Acadêmica','Nome em breve'],['Políticas Educacionais','Nome em breve'],['Comunicação','Nome em breve'],['Social','Nome em breve'],['Étnico-Racial','Nome em breve'],['LGBT','Nome em breve'],['Mulheres','Nome em breve']];
+/* ======================================== */
+var $=function(s){return document.querySelector(s)};
+var likes={},cur=null,filt='Todas',qs='';
+try{likes=JSON.parse(localStorage.getItem('likes')||'{}')}catch(e){}
+function save(){try{localStorage.setItem('likes',JSON.stringify(likes))}catch(e){}}
+function count(el,to,d){var t0=performance.now();(function f(t){var k=Math.min((t-t0)/d,1);el.textContent=Math.round(to*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(t0)}
+function nLikes(){return Object.keys(likes).filter(function(k){return likes[k]}).length}
+function chips(){var h='',a=['Todas'].concat(Object.keys(AREAS));a.forEach(function(x){h+='<button class="chip'+(x===filt?' on':'')+'" data-a="'+x+'">'+x+'</button>'});$('#chips').innerHTML=h}
+function render(){
+  var n=0,h='';
+  P.forEach(function(p,k){
+    if((filt!=='Todas'&&p.a!==filt)||(qs&&(p.t+p.s+p.d.join(' ')).toLowerCase().indexOf(qs)<0))return;
+    h+='<button class="card" data-id="'+p.id+'" style="--c:'+AREAS[p.a]+';animation-delay:'+(n*60)+'ms"><span class="ico">'+p.i+'</span><h3>'+p.t+'</h3><p>'+p.s+'</p><span class="tag">'+p.a+(likes[p.id]?' ♥':'')+'</span></button>';n++});
+  $('#grid').innerHTML=h;$('#empty').style.display=n?'none':'block';
+}
+function spark(x,y){var cs=['#FF5C8A','#FFC93C','#14B88F','#2D3BFF'];for(var i=0;i<14;i++){var s=document.createElement('i');s.className='spark';var a=Math.random()*6.28,r=40+Math.random()*60;s.style.cssText='left:'+x+'px;top:'+y+'px;background:'+cs[i%4]+';--dx:'+Math.cos(a)*r+'px;--dy:'+Math.sin(a)*r+'px';document.body.appendChild(s);setTimeout(function(e){e.remove()},900,s)}}
+function open_(id){
+  cur=P.filter(function(p){return p.id==id})[0];
+  $('.mh').style.setProperty('--c',AREAS[cur.a]);$('#di').textContent=cur.i;$('#dt').textContent=cur.t;
+  $('#dl').innerHTML=cur.d.map(function(x,k){return '<li style="animation-delay:'+(200+k*150)+'ms">'+x+'</li>'}).join('')+'<li style="animation-delay:700ms;color:var(--mute)">⏱ '+cur.w+'</li>';
+  like_(false);$('#dlg').showModal();
+}
+function like_(tog){if(tog)likes[cur.id]=!likes[cur.id];save();var b=$('#dk');b.classList.toggle('on',!!likes[cur.id]);b.textContent=likes[cur.id]?'♥ Apoiado!':'♥ Apoiar';$('#nLikes').textContent=nLikes();if(tog){render();if(likes[cur.id]){var r=b.getBoundingClientRect();spark(r.left+r.width/2,r.top+r.height/2)}}}
+$('#chips').addEventListener('click',function(e){var a=e.target.dataset.a;if(!a)return;filt=a;chips();render()});
+$('#q').addEventListener('input',function(e){qs=e.target.value.toLowerCase().trim();render()});
+$('#grid').addEventListener('click',function(e){var c=e.target.closest('.card');if(c)open_(c.dataset.id)});
+$('#dk').onclick=function(){like_(true)};$('#dx').onclick=function(){$('#dlg').close()};
+$('#dlg').addEventListener('click',function(e){if(e.target===this)this.close()});
+function E(s){return String(s).replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m]})}
+var W=['mudar','ousar','ouvir'],wi=0;
+function tick(){var e=$('#pal');e.textContent=W[wi%W.length]+'.';e.style.animation='none';e.offsetWidth;e.style.animation='wordin .5s cubic-bezier(.2,1,.3,1)'}
+function apply(d){
+  if(d.areas)AREAS=d.areas;if(d.propostas)P=d.propostas;if(d.cronograma)ROAD=d.cronograma;if(d.diretoria)TEAM=d.diretoria;
+  var c=d.chapa||{};
+  if(c.nome){$('#nome').innerHTML=E(c.nome).replace(' ','<br>');document.title=c.nome+' – Nossas propostas'}
+  if(c.lema!=null)$('#lema').textContent=c.lema;
+  if(c.palavras&&c.palavras.length)W=c.palavras;
+  if(c.frase!=null)$('#frase').textContent=c.frase;
+  if(c.logo){var l=$('#logo');l.src=c.logo;l.hidden=false}
+  $('#fim').textContent=(c.nome||'')+': '+(c.lema||'')+' '+(W[0]||'');
+}
+function boot(){
+chips();render();
+$('#road').innerHTML=ROAD.map(function(r){return '<div class="step"><b>'+r[0]+'</b><span>'+r[1]+'</span></div>'}).join('');
+var cols=['#7F8BFF','#FFC93C','#FF5C8A','#14B88F','#B58CFF'];
+$('#team').innerHTML=TEAM.map(function(m,k){var n=m[1],h=!!n,x=E(h?n:m[0]);return '<div class="p rv"><div class="av" style="background:'+cols[k%cols.length]+';animation-delay:-'+k+'s">'+x[0]+'</div><b>'+x+'</b><br><small>'+(h?E(m[0]):'Nome em breve')+'</small></div>'}).join('');
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');var b=e.target.querySelectorAll('.stat b');b.forEach(function(el){var n=el.id==='nLikes'?nLikes():el.id==='nTotal'?P.length:+el.dataset.n;count(el,n,1200)});io.unobserve(e.target)}})},{threshold:.2});
+document.querySelectorAll('.rv,.step').forEach(function(el){io.observe(el)});
+$('#nTotal').dataset.n=P.length;
+addEventListener('scroll',function(){var r=$('#road').getBoundingClientRect(),p=(innerHeight*.7-r.top)/r.height;$('#road').style.setProperty('--p',Math.max(0,Math.min(1,p))*100+'%')},{passive:true});
+
+$('.stat:nth-child(2) b').dataset.n=Object.keys(AREAS).length;
+}
+fetch('dados.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(d){if(d)apply(d);boot();tick();setInterval(function(){wi++;tick()},2600)});
+</script>
+</body>
+</html>

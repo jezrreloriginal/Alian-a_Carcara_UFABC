@@ -1,0 +1,368 @@
+{
+ "chapa": {
+  "nome": "Aliança Carcará",
+  "lema": "coragem para",
+  "palavras": [
+   "mudar",
+   "ousar",
+   "ouvir"
+  ],
+  "frase": "Uma universidade, muitas vozes. Um DCE para todos.",
+  "logo": ""
+ },
+ "areas": {
+  "Gestão": "#7F8BFF",
+  "Acadêmico": "#FFC93C",
+  "Cultura e Esporte": "#FF5C8A",
+  "Diversidade": "#B58CFF",
+  "Infraestrutura": "#14B88F",
+  "Entidades": "#FF9A5C"
+ },
+ "propostas": [
+  {
+   "id": 1,
+   "a": "Gestão",
+   "i": "🔍",
+   "t": "Transparência total",
+   "s": "Cada real e cada ação, à vista de todos.",
+   "d": [
+    "Balancete publicado todo mês, até o dia 5",
+    "Relatório de atividades a cada quadrimestre",
+    "Portal público com atas e documentos"
+   ],
+   "w": "Todo mês"
+  },
+  {
+   "id": 2,
+   "a": "Gestão",
+   "i": "💬",
+   "t": "Atendimento e reuniões abertas",
+   "s": "Sua demanda tem resposta e acompanhamento.",
+   "d": [
+    "Canais oficiais e plantões nos dois campi",
+    "Toda demanda vai para a diretoria certa",
+    "Reuniões abertas com pauta divulgada"
+   ],
+   "w": "Primeiros 60 dias"
+  },
+  {
+   "id": 3,
+   "a": "Acadêmico",
+   "i": "🤝",
+   "t": "Defesa dos direitos discentes",
+   "s": "Mediação e orientação, não só reclamação.",
+   "d": [
+    "Diálogo direto com coordenações e setores",
+    "Orientação sobre direitos e deveres",
+    "Acompanhamento até a solução"
+   ],
+   "w": "Primeiros 60 dias"
+  },
+  {
+   "id": 4,
+   "a": "Acadêmico",
+   "i": "📅",
+   "t": "Ferramenta de prazos",
+   "s": "Nunca mais perder rematrícula ou trancamento.",
+   "d": [
+    "Calendário acadêmico claro e antecipado",
+    "Parceria com a tecnologia da UFABC",
+    "Avisos de ajustes, trancamentos e jubilamento"
+   ],
+   "w": "Primeiros 60 dias"
+  },
+  {
+   "id": 5,
+   "a": "Acadêmico",
+   "i": "🧾",
+   "t": "Auxílios sem enrolação",
+   "s": "Editais explicados e orientação passo a passo.",
+   "d": [
+    "Divulgação de prazos e documentos",
+    "Ajuda na solicitação e na renovação",
+    "Defesa de mais alimentação, moradia e transporte"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 6,
+   "a": "Acadêmico",
+   "i": "♿",
+   "t": "Provas acessíveis",
+   "s": "Um espaço adequado para avaliar com equidade.",
+   "d": [
+    "Parceria com a Monitoria Inclusiva",
+    "Local acolhedor para provas e atividades",
+    "Adaptações respeitando cada caso"
+   ],
+   "w": "Em até 90 dias"
+  },
+  {
+   "id": 7,
+   "a": "Acadêmico",
+   "i": "🍛",
+   "t": "RU acessível",
+   "s": "Refeição boa, a preço justo.",
+   "d": [
+    "Mais recursos da universidade no custo da refeição",
+    "Participação do CAFRU nas discussões",
+    "Abaixo-assinados e mobilização coletiva"
+   ],
+   "w": "No 1º semestre"
+  },
+  {
+   "id": 8,
+   "a": "Acadêmico",
+   "i": "🔬",
+   "t": "Iniciação científica para todos",
+   "s": "Descubra laboratórios e orientadores.",
+   "d": [
+    "Feiras de divulgação científica",
+    "Catálogo digital de laboratórios",
+    "Foco em ingressantes e quem nunca fez pesquisa"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 9,
+   "a": "Cultura e Esporte",
+   "i": "🏆",
+   "t": "RUDIC UFABC",
+   "s": "Esporte, ciência, cultura e mídia numa só rede.",
+   "d": [
+    "4 eixos: esportivo, científico, cultural e midiático",
+    "Atléticas, CAs, coletivos e independentes juntos",
+    "Pontuação geral e Troféu RUDIC"
+   ],
+   "w": "No 1º semestre"
+  },
+  {
+   "id": 10,
+   "a": "Cultura e Esporte",
+   "i": "👋",
+   "t": "Recepção de ingressantes",
+   "s": "Boas-vindas a cada quadrimestre.",
+   "d": [
+    "Atividades culturais, esportivas e solidárias",
+    "Feita junto com CAs e Atléticas",
+    "Medimos participantes e doações"
+   ],
+   "w": "A cada quadrimestre"
+  },
+  {
+   "id": 11,
+   "a": "Cultura e Esporte",
+   "i": "🧠",
+   "t": "Saúde mental e bem-estar",
+   "s": "Apoio forte nas semanas de prova.",
+   "d": [
+    "Rodas de conversa e ações de acolhimento",
+    "Combate ao esgotamento acadêmico",
+    "Parcerias com setores especializados"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 12,
+   "a": "Diversidade",
+   "i": "🛡️",
+   "t": "Acolhimento e denúncias",
+   "s": "Canais seguros para quem sofreu violência.",
+   "d": [
+    "Atendimento confidencial e orientação",
+    "Ponte com as instâncias oficiais",
+    "Relatórios sem expor ninguém"
+   ],
+   "w": "Em até 120 dias"
+  },
+  {
+   "id": 13,
+   "a": "Diversidade",
+   "i": "🌈",
+   "t": "Campanhas contra a discriminação",
+   "s": "Respeito se constrói todo dia.",
+   "d": [
+    "Contra assédio, racismo, machismo e LGBTfobia",
+    "Contra xenofobia e outras violências",
+    "Rodas de conversa e materiais educativos"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 14,
+   "a": "Diversidade",
+   "i": "✊",
+   "t": "Cotistas, indígenas e quilombolas",
+   "s": "Permanência e voz nas decisões do DCE.",
+   "d": [
+    "Defesa das ações afirmativas",
+    "Escuta das dificuldades específicas",
+    "Espaço nas decisões da gestão"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 15,
+   "a": "Diversidade",
+   "i": "👶",
+   "t": "Pais e mães universitários",
+   "s": "Estudar e cuidar, sem abrir mão de nenhum.",
+   "d": [
+    "Levantamento das necessidades",
+    "Espaços de amamentação e cuidado infantil",
+    "Mais divulgação dos apoios existentes"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 16,
+   "a": "Infraestrutura",
+   "i": "🏫",
+   "t": "Mapa de problemas dos campi",
+   "s": "Sala, laboratório, banheiro: tudo registrado.",
+   "d": [
+    "Levantamento em Santo André e São Bernardo",
+    "Encaminhamento à Reitoria e direções",
+    "Painel público de demandas"
+   ],
+   "w": "Em até 90 dias"
+  },
+  {
+   "id": 17,
+   "a": "Infraestrutura",
+   "i": "🌙",
+   "t": "Segurança e iluminação",
+   "s": "Campus seguro também à noite.",
+   "d": [
+    "Foco nos horários de menor circulação",
+    "Melhoria de acessos e sinalização",
+    "Diálogo com os setores responsáveis"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 18,
+   "a": "Infraestrutura",
+   "i": "🌱",
+   "t": "Campus sustentável",
+   "s": "Menos plástico, mais horta.",
+   "d": [
+    "Coleta seletiva",
+    "Redução de plástico descartável",
+    "Horta comunitária"
+   ],
+   "w": "Durante todo o mandato"
+  },
+  {
+   "id": 19,
+   "a": "Infraestrutura",
+   "i": "🏷️",
+   "t": "Descontos no comércio do ABC",
+   "s": "Sua carteirinha rende vantagens.",
+   "d": [
+    "Restaurantes, papelarias, academias e mais",
+    "Validação simples pela identificação estudantil",
+    "Parcerias com a sociedade civil da região"
+   ],
+   "w": "Em até 120 dias"
+  },
+  {
+   "id": 20,
+   "a": "Entidades",
+   "i": "🏛️",
+   "t": "Conselho de Entidades",
+   "s": "CAs, Atléticas e coletivos decidindo juntos.",
+   "d": [
+    "Cada entidade com representante e voz",
+    "Pautas públicas e atas registradas",
+    "Ajuda com burocracia e reserva de espaços"
+   ],
+   "w": "Primeiros 60 dias"
+  },
+  {
+   "id": 21,
+   "a": "Entidades",
+   "i": "🚌",
+   "t": "Ônibus para atividades externas",
+   "s": "Competição e congresso sem vaquinha.",
+   "d": [
+    "Editais de apoio ao transporte institucional",
+    "Critérios transparentes e iguais para todos",
+    "Diálogo com Reitoria e Pró-Reitorias"
+   ],
+   "w": "No 1º semestre"
+  }
+ ],
+ "cronograma": [
+  [
+   "Primeiros 60 dias",
+   "Canal de demandas, Conselho de Entidades e início da ferramenta de prazos"
+  ],
+  [
+   "Até 90 dias",
+   "Levantamento dos campi e espaço para provas acessíveis"
+  ],
+  [
+   "Até 120 dias",
+   "Fluxo de acolhimento e parcerias no comércio do ABC"
+  ],
+  [
+   "1º semestre",
+   "RU, RUDIC e recepção de ingressantes"
+  ],
+  [
+   "Sempre",
+   "Balancete todo mês e relatório a cada quadrimestre"
+  ]
+ ],
+ "diretoria": [
+  [
+   "Presidência",
+   ""
+  ],
+  [
+   "Vice-Presidência",
+   ""
+  ],
+  [
+   "Tesouraria",
+   ""
+  ],
+  [
+   "1ª Tesouraria",
+   ""
+  ],
+  [
+   "Secretaria-Geral",
+   ""
+  ],
+  [
+   "Cultural e Acadêmica",
+   ""
+  ],
+  [
+   "Políticas Educacionais",
+   ""
+  ],
+  [
+   "Comunicação",
+   ""
+  ],
+  [
+   "Social",
+   ""
+  ],
+  [
+   "Étnico-Racial",
+   ""
+  ],
+  [
+   "LGBT",
+   ""
+  ],
+  [
+   "Mulheres",
+   ""
+  ]
+ ]
+}
